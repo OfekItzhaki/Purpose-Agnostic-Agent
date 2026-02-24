@@ -35,14 +35,15 @@ export class CreatePersonaDto {
   description!: string;
 
   @ApiProperty({
-    description: 'System prompt that defines the persona behavior',
-    example: 'You are a helpful technical support agent...',
-    maxLength: 5000,
+    description: 'Optional style/tone instructions for the persona (cannot override RAG-only rules)',
+    example: 'Be concise and technical. Use bullet points when appropriate.',
+    maxLength: 2000,
+    required: false,
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(5000)
-  systemPrompt!: string;
+  @MaxLength(2000)
+  extraInstructions?: string;
 
   @ApiProperty({
     description: 'Knowledge category to filter RAG search results',

@@ -2,7 +2,7 @@ export interface Persona {
   id: string;
   name: string;
   description: string;
-  systemPrompt: string;
+  extraInstructions?: string; // Optional style/tone instructions (cannot override RAG-only rules)
   knowledgeCategory: string;
   temperature?: number;
   maxTokens?: number;

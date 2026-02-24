@@ -11,8 +11,8 @@ export class PersonaEntity {
   @Column()
   description!: string;
 
-  @Column({ type: 'text' })
-  system_prompt!: string;
+  @Column({ type: 'text', nullable: true })
+  extra_instructions?: string;
 
   @Column()
   knowledge_category!: string;

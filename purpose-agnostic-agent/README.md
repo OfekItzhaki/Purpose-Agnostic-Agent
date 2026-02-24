@@ -1,14 +1,17 @@
 # Purpose-Agnostic Agent
 
-An intelligent agent system built with NestJS that provides LLM routing with failover, RAG-based knowledge retrieval, and dynamic persona management.
+An intelligent RAG-only agent system built with NestJS that provides LLM routing with failover, vector-based knowledge retrieval, and dynamic persona management.
 
 ## Overview
 
-The Purpose-Agnostic Agent is a modular backend system that enables AI agents to operate without knowing their purpose until runtime. It features:
+The Purpose-Agnostic Agent is a modular backend system that enables AI agents to operate without knowing their purpose until runtime. **This service is RAG-only: it answers questions strictly based on indexed documents in the knowledge base.**
 
+Key features:
+
+- **RAG-Only Architecture**: Answers are strictly based on indexed documents (no external knowledge)
 - **Model Router**: Three-tier LLM failover (Gemini Pro → GPT-4o → Claude-3.5 → Ollama)
 - **RAG System**: Vector-based knowledge retrieval using pgvector
-- **Persona Manager**: Dynamic agent configuration with CQRS pattern
+- **Persona Manager**: Dynamic agent configuration with customizable style/tone
 - **REST API**: Chat endpoints with session continuity
 - **Observability**: Structured logging, metrics, and health checks
 
@@ -28,6 +31,10 @@ The Purpose-Agnostic Agent is a modular backend system that enables AI agents to
        ▼
 ┌─────────────────────────────────────┐
 │      Chat Service (Orchestrator)    │
+│   ┌──────────────────────────────┐  │
+│   │ RAG-Only System Prompt       │  │
+│   │ (Enforces context-only rule) │  │
+│   └──────────────────────────────┘  │
 └──┬────────┬────────────┬────────────┘
    │        │            │
    ▼        ▼            ▼
@@ -41,6 +48,16 @@ The Purpose-Agnostic Agent is a modular backend system that enables AI agents to
         │pgvector│   │LLM Providers│
         └────────┘   └──────────┘
 ```
+
+## RAG-Only Behavior
+
+This system is **strictly RAG-only**:
+
+- All answers are based ONLY on indexed documents in the knowledge base
+- The system NEVER uses the LLM's general knowledge or training data
+- If the knowledge base doesn't contain relevant information, the system responds: "I don't have enough information in my knowledge base to answer that question."
+- Personas can customize style/tone but CANNOT override the RAG-only rules
+- Optional self-check feature validates that answers use only the provided context
 
 ## Prerequisites
 
@@ -153,7 +170,7 @@ POST /api/personas
   "id": "custom-agent",
   "name": "Custom Agent",
   "description": "A custom agent",
-  "systemPrompt": "You are a helpful assistant...",
+  "extraInstructions": "Be concise and use bullet points when appropriate.",
   "knowledgeCategory": "general",
   "temperature": 0.7,
   "maxTokens": 1000
@@ -163,6 +180,7 @@ POST /api/personas
 PUT /api/personas/:id
 {
   "name": "Updated Name",
+  "extraInstructions": "Updated style instructions",
   "temperature": 0.8
 }
 
@@ -170,21 +188,25 @@ PUT /api/personas/:id
 DELETE /api/personas/:id
 ```
 
+**Note**: Personas can only customize style/tone via `extraInstructions`. The core RAG-only system prompt is immutable.
+
 ## Persona Configuration
 
-Personas are defined in `config/personas.json`:
+Personas define the style and tone of responses, but CANNOT override RAG-only rules. They are defined in `config/personas.json`:
 
 ```json
 {
   "id": "technical-expert",
   "name": "Technical Expert",
   "description": "A technical expert specializing in software development",
-  "systemPrompt": "You are a technical expert...",
+  "extraInstructions": "Provide detailed technical explanations. Use technical terminology appropriately.",
   "knowledgeCategory": "technical",
   "temperature": 0.5,
   "maxTokens": 1500
 }
 ```
+
+**Important**: The `extraInstructions` field can only customize style/tone. The core RAG-only system prompt is shared across all personas and cannot be overridden.
 
 ## Knowledge Ingestion
 
@@ -204,6 +226,22 @@ Documents are automatically:
 1. Parsed and chunked
 2. Embedded using OpenAI text-embedding-3-small
 3. Stored in pgvector for similarity search
+
+## RAG Self-Check (Optional)
+
+The system includes an optional self-check feature that validates answers use only the provided context:
+
+```env
+# Enable self-check (adds ~1-2 seconds latency per request)
+RAG_SELF_CHECK_ENABLED=true
+```
+
+When enabled:
+- After generating an answer, the system asks the LLM to validate it uses only the context
+- If validation fails, the system responds: "I don't have enough information in my knowledge base to answer that question."
+- This adds extra latency but provides stronger guarantees of RAG-only behavior
+
+**Recommendation**: Enable in production for critical applications where accuracy is paramount. Disable for development or when latency is a concern.
 
 ## Observability
 
@@ -330,6 +368,7 @@ USAGE_TRACKING_ENABLED=false
 | `OPENAI_API_KEY` | Yes | - | OpenAI API key for embeddings |
 | `OPENROUTER_API_KEY` | No | - | OpenRouter API key (fallback LLMs) |
 | `OLLAMA_URL` | No | http://ollama:11434 | Ollama endpoint |
+| `RAG_SELF_CHECK_ENABLED` | No | false | Enable self-check to validate RAG-only answers |
 | `USAGE_TRACKING_ENABLED` | No | false | Enable usage tracking for API limits |
 | `DAILY_REQUEST_LIMIT` | No | 999999 | Daily request limit (set to 1500 for Gemini free tier) |
 | `DAILY_TOKEN_LIMIT` | No | 999999999 | Daily token limit (set to 1000000 for Gemini free tier) |

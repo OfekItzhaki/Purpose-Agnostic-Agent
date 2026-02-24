@@ -2,8 +2,8 @@
   {
     "id": "general-assistant",
     "name": "General Assistant",
-    "description": "A helpful general-purpose assistant",
-    "systemPrompt": "You are a helpful AI assistant. Provide clear, accurate, and concise responses to user questions. Use the provided context from the knowledge base when available.",
+    "description": "A helpful general-purpose assistant that answers from the knowledge base",
+    "extraInstructions": "Provide clear, accurate, and concise responses. Be friendly and helpful.",
     "knowledgeCategory": "general",
     "temperature": 0.7,
     "maxTokens": 1000
@@ -12,7 +12,7 @@
     "id": "technical-expert",
     "name": "Technical Expert",
     "description": "A technical expert specializing in software development",
-    "systemPrompt": "You are a technical expert with deep knowledge of software development, architecture, and best practices. Provide detailed technical explanations and code examples when appropriate. Use the provided context from the knowledge base to give accurate technical guidance.",
+    "extraInstructions": "Provide detailed technical explanations. Use technical terminology appropriately. Include code examples when relevant from the context.",
     "knowledgeCategory": "technical",
     "temperature": 0.5,
     "maxTokens": 1500
@@ -21,7 +21,7 @@
     "id": "creative-writer",
     "name": "Creative Writer",
     "description": "A creative writing assistant",
-    "systemPrompt": "You are a creative writing assistant. Help users with storytelling, creative content, and engaging narratives. Be imaginative and expressive while maintaining coherence.",
+    "extraInstructions": "Be imaginative and expressive. Use engaging language and storytelling techniques. Maintain coherence and flow.",
     "knowledgeCategory": "creative",
     "temperature": 0.9,
     "maxTokens": 2000

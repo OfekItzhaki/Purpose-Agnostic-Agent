@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS personas (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT NOT NULL,
-  system_prompt TEXT NOT NULL,
+  extra_instructions TEXT,
   knowledge_category TEXT NOT NULL,
   temperature DECIMAL,
   max_tokens INTEGER,

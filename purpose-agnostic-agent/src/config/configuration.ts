@@ -14,6 +14,7 @@ export const configurationSchema = Joi.object({
   LOG_LEVEL: Joi.string()
     .valid('error', 'warn', 'info', 'debug')
     .default('info'),
+  RAG_SELF_CHECK_ENABLED: Joi.string().valid('true', 'false').default('false'),
   USAGE_TRACKING_ENABLED: Joi.string().valid('true', 'false').default('false'),
   DAILY_REQUEST_LIMIT: Joi.number().default(999999),
   DAILY_TOKEN_LIMIT: Joi.number().default(999999999),

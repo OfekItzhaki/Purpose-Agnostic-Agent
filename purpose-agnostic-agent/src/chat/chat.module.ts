@@ -8,6 +8,7 @@ import { PersonaModule } from '../persona/persona.module';
 import { RAGModule } from '../rag/rag.module';
 import { ModelRouterModule } from '../model-router/model-router.module';
 import { StructuredLogger } from '../common/logger.service';
+import { RAGSystemPromptService } from '../common/rag-system-prompt.service';
 
 @Module({
   imports: [PersonaModule, RAGModule, ModelRouterModule],
@@ -15,6 +16,7 @@ import { StructuredLogger } from '../common/logger.service';
   providers: [
     ChatService,
     StructuredLogger,
+    RAGSystemPromptService,
     {
       provide: 'DATABASE_POOL',
       useFactory: () => {

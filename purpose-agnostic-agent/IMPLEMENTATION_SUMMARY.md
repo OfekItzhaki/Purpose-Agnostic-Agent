@@ -1,6 +1,6 @@
 # Purpose-Agnostic Agent - Implementation Summary
 
-**Project Status:** ✅ MVP Complete with Security Enhancements  
+**Project Status:** ✅ MVP Complete with RAG-Only Architecture  
 **Build Status:** ✅ Passing (0 TypeScript errors)  
 **Date:** 2026-02-24
 
@@ -8,13 +8,15 @@
 
 ## 📋 What Was Built
 
-A production-ready NestJS backend for an intelligent agent system with:
+A production-ready NestJS backend for an intelligent RAG-only agent system with:
+- **RAG-Only Architecture** - Answers strictly from indexed documents (no external knowledge)
 - **LLM Routing** with 3-tier failover (Gemini → GPT-4o → Claude → Ollama)
 - **RAG System** with pgvector for knowledge retrieval
-- **Dynamic Persona Management** via REST API
+- **Dynamic Persona Management** via REST API (style/tone customization only)
 - **MCP Server** with two tools (ask_agent, search_knowledge)
 - **Complete Security Layer** with JWT + API Key authentication
 - **Observability Stack** (swappable: Seq, Prometheus, Grafana)
+- **Optional Self-Check** for validating RAG-only behavior
 
 ---
 
@@ -43,7 +45,8 @@ A production-ready NestJS backend for an intelligent agent system with:
 │ Chat Module  │ │ Persona  │ │ MCP Server   │
 │              │ │ Module   │ │ Module       │
 │ - Sessions   │ │ - CRUD   │ │ - ask_agent  │
-│ - Context    │ │ - Cache  │ │ - search_kb  │
+│ - RAG-Only   │ │ - Style  │ │ - search_kb  │
+│ - Self-Check │ │ - Cache  │ │              │
 └──────┬───────┘ └────┬─────┘ └──────┬───────┘
        │              │               │
        ▼              ▼               ▼
@@ -118,9 +121,13 @@ A production-ready NestJS backend for an intelligent agent system with:
 - ✅ PostgreSQL + JSON file storage
 - ✅ Persona validation
 - ✅ In-memory caching
+- ✅ Extra instructions for style/tone (RAG-only compliant)
 
 ### Phase 6: Chat Module (100%)
 - ✅ Chat service orchestration
+- ✅ RAG-only system prompt service
+- ✅ Retrieval-first flow (always query RAG before LLM)
+- ✅ Optional self-check for answer validation
 - ✅ Session management with PostgreSQL
 - ✅ POST /api/chat endpoint
 - ✅ GET /api/agents endpoint
@@ -215,6 +222,63 @@ A production-ready NestJS backend for an intelligent agent system with:
 - **Prettier** - Code formatting
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
+
+---
+
+## 🎯 RAG-Only Architecture
+
+### Core Principles
+The system is designed as a **strictly RAG-only** architecture:
+- ✅ All answers based ONLY on indexed documents
+- ✅ No external knowledge or LLM training data used
+- ✅ Explicit "I don't know" responses when context is insufficient
+- ✅ Immutable core RAG-only system prompt
+- ✅ Personas can only customize style/tone, not behavior
+
+### RAG System Prompt Service
+**Location**: `src/common/rag-system-prompt.service.ts`
+
+Provides shared, immutable system prompt that enforces RAG-only rules:
+- ✅ Core RAG-only rules (cannot be overridden)
+- ✅ Persona style instructions (optional)
+- ✅ Structured prompt building
+- ✅ Context + question formatting
+
+### Retrieval-First Flow
+**Location**: `src/chat/chat.service.ts`
+
+Enforces strict retrieval-first flow:
+1. ✅ Receive user question
+2. ✅ ALWAYS query RAG system first
+3. ✅ Retrieve relevant chunks from knowledge base
+4. ✅ Build system prompt (core rules + persona style)
+5. ✅ Build user message (context + question)
+6. ✅ Call LLM with structured prompt
+7. ✅ Optional self-check validation
+8. ✅ Return answer with citations
+
+### Optional Self-Check
+**Configuration**: `RAG_SELF_CHECK_ENABLED=true`
+
+Validates that answers use only the provided context:
+- ✅ LLM validates its own answer
+- ✅ Replaces invalid answers with "I don't know"
+- ✅ Adds ~1-2 seconds latency
+- ✅ Recommended for production critical applications
+
+### Persona System
+**Location**: `src/persona/`
+
+Personas define style/tone but CANNOT override RAG-only rules:
+- ✅ `extraInstructions` field for style customization
+- ✅ Cannot change core RAG-only behavior
+- ✅ Examples: formal/casual, technical/simple, concise/detailed
+
+### Documentation
+- ✅ `docs/RAG_ONLY_ARCHITECTURE.md` - Complete architecture guide
+- ✅ `scripts/migrate-to-rag-only.sql` - Migration script
+- ✅ Updated README with RAG-only emphasis
+- ✅ Updated API documentation
 
 ---
 
