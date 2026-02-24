@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import type { Queue } from 'bull';
 import type {
@@ -15,7 +15,9 @@ export class RAGService {
   private readonly logger = new StructuredLogger();
 
   constructor(
+    @Inject('KnowledgeChunkRepository')
     private readonly chunkRepository: KnowledgeChunkRepository,
+    @Inject('EmbeddingService')
     private readonly embeddingService: EmbeddingService,
     @InjectQueue('document-ingestion')
     private readonly ingestionQueue: Queue,

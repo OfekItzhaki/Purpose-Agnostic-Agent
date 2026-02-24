@@ -1,6 +1,6 @@
 import { Process, Processor } from '@nestjs/bull';
 import type { Job } from 'bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { createHash } from 'crypto';
@@ -23,7 +23,9 @@ export class DocumentIngestionProcessor {
 
   constructor(
     private readonly pdfParser: PDFParserService,
+    @Inject('EmbeddingService')
     private readonly embeddingService: EmbeddingService,
+    @Inject('KnowledgeChunkRepository')
     private readonly chunkRepository: KnowledgeChunkRepository,
     @InjectRepository(KnowledgeDocument)
     private readonly documentRepository: Repository<KnowledgeDocument>,

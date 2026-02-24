@@ -7,7 +7,6 @@ import { OpenAIEmbeddingService } from './services/openai-embedding.service.js';
 import { PostgresKnowledgeChunkRepository } from './repositories/postgres-knowledge-chunk.repository.js';
 import { KnowledgeDocument } from './entities/knowledge-document.entity.js';
 import { KnowledgeChunk } from './entities/knowledge-chunk.entity.js';
-import { DocumentIngestionProcessor } from '../jobs/processors/document-ingestion.processor.js';
 
 @Module({
   imports: [
@@ -19,18 +18,23 @@ import { DocumentIngestionProcessor } from '../jobs/processors/document-ingestio
   providers: [
     RAGService,
     PDFParserService,
+    OpenAIEmbeddingService,
+    PostgresKnowledgeChunkRepository,
     {
       provide: 'EmbeddingService',
-      useClass: OpenAIEmbeddingService,
+      useExisting: OpenAIEmbeddingService,
     },
     {
       provide: 'KnowledgeChunkRepository',
-      useClass: PostgresKnowledgeChunkRepository,
+      useExisting: PostgresKnowledgeChunkRepository,
     },
-    OpenAIEmbeddingService,
-    PostgresKnowledgeChunkRepository,
-    DocumentIngestionProcessor,
   ],
-  exports: [RAGService],
+  exports: [
+    RAGService,
+    PDFParserService,
+    OpenAIEmbeddingService,
+    'EmbeddingService',
+    'KnowledgeChunkRepository',
+  ],
 })
 export class RAGModule {}

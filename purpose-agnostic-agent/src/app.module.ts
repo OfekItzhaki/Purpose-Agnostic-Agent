@@ -13,6 +13,7 @@ import { RAGModule } from './rag/rag.module.js';
 import { PersonaModule } from './persona/persona.module.js';
 import { ChatModule } from './chat/chat.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
+import { DocumentIngestionModule } from './jobs/document-ingestion.module.js';
 import { HealthModule } from './health/health.module.js';
 import { MCPModule } from './mcp/mcp.module.js';
 
@@ -55,6 +56,7 @@ import { MCPModule } from './mcp/mcp.module.js';
     PersonaModule,
     ChatModule,
     JobsModule,
+    DocumentIngestionModule,
     HealthModule,
     MCPModule,
   ],

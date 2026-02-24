@@ -12,7 +12,9 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/purpose_agnostic_agent
       - REDIS_URL=redis://redis:6379
+      - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OLLAMA_URL=http://ollama:11434
       # Optional observability endpoints (can be replaced)
       - SEQ_URL=${SEQ_URL:-}
@@ -37,7 +39,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=purpose_agnostic_agent
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
@@ -54,7 +56,7 @@ services:
     image: redis:7-alpine
     container_name: purpose-agnostic-agent-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis-data:/data
     healthcheck:
