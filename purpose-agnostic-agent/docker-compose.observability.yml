@@ -1,0 +1,65 @@
+version: '3.8'
+
+# Optional observability stack - can be replaced with alternatives
+# Alternatives: Datadog, New Relic, Elastic Stack, etc.
+
+services:
+  seq:
+    image: datalust/seq:latest
+    container_name: purpose-agnostic-agent-seq
+    ports:
+      - "5341:80"
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - seq-data:/data
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+    profiles:
+      - observability
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: purpose-agnostic-agent-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+    profiles:
+      - observability
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: purpose-agnostic-agent-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+    profiles:
+      - observability
+
+volumes:
+  seq-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  purpose-agnostic-agent-network:
+    external: true

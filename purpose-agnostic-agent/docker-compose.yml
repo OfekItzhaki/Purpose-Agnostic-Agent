@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: purpose-agnostic-agent-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/purpose_agnostic_agent
+      - REDIS_URL=redis://redis:6379
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OLLAMA_URL=http://ollama:11434
+      # Optional observability endpoints (can be replaced)
+      - SEQ_URL=${SEQ_URL:-}
+      - PROMETHEUS_ENABLED=${PROMETHEUS_ENABLED:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./knowledge:/app/knowledge:ro
+      - ./config/personas.json:/app/config/personas.json:ro
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: purpose-agnostic-agent-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=purpose_agnostic_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: purpose-agnostic-agent-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: purpose-agnostic-agent-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - purpose-agnostic-agent-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  ollama-data:
+
+networks:
+  purpose-agnostic-agent-network:
+    driver: bridge

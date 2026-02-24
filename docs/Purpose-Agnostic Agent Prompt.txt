@@ -1,0 +1,8 @@
+Build a NestJS backend called 'Universal Brain'. 
+Requirements:
+1. Implement a Model Router with failover support (Primary: GPT-4o, Fallback: Claude-3.5, Local: Ollama).
+2. Build a RAG system using pgvector. Support multiple 'Knowledge Categories' based on file folders.
+3. Implement a 'Persona Manager' where I can define different roles (System Prompts) in a config file.
+4. Expose an MCP Server with tools: `ask_agent(agent_id, question)`, `search_knowledge(query, category)`.
+5. Expose a REST API `POST /api/chat` that accepts an `agent_id` and returns the LLM response with RAG citations.
+Ensure the LLM never knows its purpose until it reads the 'agent_id' configuration at runtime.
