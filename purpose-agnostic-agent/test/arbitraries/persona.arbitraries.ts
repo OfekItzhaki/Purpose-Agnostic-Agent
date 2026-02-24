@@ -13,13 +13,13 @@ import {
 } from './common.arbitraries';
 
 /**
- * Generate valid Persona objects
+ * Generate valid Persona objects (RAG-only architecture)
  */
 export const personaArbitrary = (): fc.Arbitrary<{
   id: string;
   name: string;
   description: string;
-  systemPrompt: string;
+  extraInstructions: string | null;
   knowledgeCategory: string;
   temperature: number;
   maxTokens: number;
@@ -28,7 +28,7 @@ export const personaArbitrary = (): fc.Arbitrary<{
     id: agentIdArbitrary(),
     name: personaNameArbitrary(),
     description: fc.string({ minLength: 10, maxLength: 500 }),
-    systemPrompt: systemPromptArbitrary(),
+    extraInstructions: fc.option(systemPromptArbitrary(), { nil: null }),
     knowledgeCategory: knowledgeCategoryArbitrary(),
     temperature: temperatureArbitrary(),
     maxTokens: maxTokensArbitrary(),
@@ -41,7 +41,7 @@ export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
   id: string;
   name: string;
   description: string;
-  systemPrompt: string;
+  extraInstructions: string | null;
   knowledgeCategory: string;
   temperature: number;
   maxTokens: number;
@@ -51,7 +51,7 @@ export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
     fc.record({
       name: personaNameArbitrary(),
       description: fc.string(),
-      systemPrompt: systemPromptArbitrary(),
+      extraInstructions: fc.option(systemPromptArbitrary(), { nil: null }),
       knowledgeCategory: knowledgeCategoryArbitrary(),
       temperature: temperatureArbitrary(),
       maxTokens: maxTokensArbitrary(),
@@ -60,17 +60,17 @@ export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
     fc.record({
       id: agentIdArbitrary(),
       description: fc.string(),
-      systemPrompt: systemPromptArbitrary(),
+      extraInstructions: fc.option(systemPromptArbitrary(), { nil: null }),
       knowledgeCategory: knowledgeCategoryArbitrary(),
       temperature: temperatureArbitrary(),
       maxTokens: maxTokensArbitrary(),
     }),
-    // Missing systemPrompt
+    // Missing knowledgeCategory
     fc.record({
       id: agentIdArbitrary(),
       name: personaNameArbitrary(),
       description: fc.string(),
-      knowledgeCategory: knowledgeCategoryArbitrary(),
+      extraInstructions: fc.option(systemPromptArbitrary(), { nil: null }),
       temperature: temperatureArbitrary(),
       maxTokens: maxTokensArbitrary(),
     }),
@@ -79,7 +79,7 @@ export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
       id: agentIdArbitrary(),
       name: personaNameArbitrary(),
       description: fc.string(),
-      systemPrompt: systemPromptArbitrary(),
+      extraInstructions: fc.option(systemPromptArbitrary(), { nil: null }),
       knowledgeCategory: knowledgeCategoryArbitrary(),
       temperature: fc.double({ min: -10, max: -0.1 }),
       maxTokens: maxTokensArbitrary(),
@@ -87,13 +87,13 @@ export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
   );
 
 /**
- * Generate CreatePersonaDto objects
+ * Generate CreatePersonaDto objects (RAG-only architecture)
  */
 export const createPersonaDtoArbitrary = (): fc.Arbitrary<{
   id: string;
   name: string;
   description: string;
-  systemPrompt: string;
+  extraInstructions?: string | null;
   knowledgeCategory: string;
   temperature?: number;
   maxTokens?: number;
@@ -102,19 +102,19 @@ export const createPersonaDtoArbitrary = (): fc.Arbitrary<{
     id: agentIdArbitrary(),
     name: personaNameArbitrary(),
     description: fc.string({ minLength: 10, maxLength: 500 }),
-    systemPrompt: systemPromptArbitrary(),
+    extraInstructions: fc.option(systemPromptArbitrary(), { nil: undefined }),
     knowledgeCategory: knowledgeCategoryArbitrary(),
     temperature: fc.option(temperatureArbitrary(), { nil: undefined }),
     maxTokens: fc.option(maxTokensArbitrary(), { nil: undefined }),
   });
 
 /**
- * Generate UpdatePersonaDto objects
+ * Generate UpdatePersonaDto objects (RAG-only architecture)
  */
 export const updatePersonaDtoArbitrary = (): fc.Arbitrary<Partial<{
   name: string;
   description: string;
-  systemPrompt: string;
+  extraInstructions: string | null;
   knowledgeCategory: string;
   temperature: number;
   maxTokens: number;
@@ -125,7 +125,7 @@ export const updatePersonaDtoArbitrary = (): fc.Arbitrary<Partial<{
       description: fc.option(fc.string({ minLength: 10, maxLength: 500 }), {
         nil: undefined,
       }),
-      systemPrompt: fc.option(systemPromptArbitrary(), { nil: undefined }),
+      extraInstructions: fc.option(systemPromptArbitrary(), { nil: undefined }),
       knowledgeCategory: fc.option(knowledgeCategoryArbitrary(), {
         nil: undefined,
       }),

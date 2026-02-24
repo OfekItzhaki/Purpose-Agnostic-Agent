@@ -140,9 +140,8 @@ describe('Model Router Property-Based Tests (Examples)', () => {
       runPropertyTest(
         fc.property(generateRequestArbitrary(), (request) => {
           // Property: All generated requests should have required fields
+          // Note: In RAG-only architecture, systemPrompt is managed by RAGSystemPromptService
           const hasRequiredFields =
-            request.systemPrompt &&
-            request.systemPrompt.length >= 10 &&
             request.userMessage &&
             request.userMessage.length >= 1;
 

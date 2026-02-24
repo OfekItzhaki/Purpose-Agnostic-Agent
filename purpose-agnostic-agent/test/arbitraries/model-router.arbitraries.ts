@@ -73,19 +73,21 @@ export const failoverEventArbitrary = (): fc.Arbitrary<{
   reason: string;
   requestId: string;
 }> =>
-  fc.record({
-    timestamp: fc.date(),
-    failedProvider: providerNameArbitrary(),
-    successfulProvider: providerNameArbitrary(),
-    reason: fc.constantFrom(
-      'timeout',
-      'http_5xx',
-      'connection_error',
-      'rate_limit',
-      'circuit_open',
-    ),
-    requestId: fc.uuid(),
-  });
+  fc
+    .record({
+      timestamp: fc.date(),
+      failedProvider: providerNameArbitrary(),
+      successfulProvider: providerNameArbitrary(),
+      reason: fc.constantFrom(
+        'timeout',
+        'http_5xx',
+        'connection_error',
+        'rate_limit',
+        'circuit_open',
+      ),
+      requestId: fc.uuid(),
+    })
+    .filter(event => event.failedProvider !== event.successfulProvider);
 
 /**
  * Generate LLM provider error objects

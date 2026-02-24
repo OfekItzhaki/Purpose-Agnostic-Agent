@@ -33,11 +33,15 @@ describe('Persona Property-Based Tests (Examples)', () => {
           const hasRequiredFields =
             invalidPersona.id &&
             invalidPersona.name &&
-            invalidPersona.systemPrompt &&
             invalidPersona.knowledgeCategory;
 
-          // Property: If any required field is missing, validation should fail
-          return !hasRequiredFields;
+          // Validate temperature if present
+          const validTemperature = 
+            invalidPersona.temperature === undefined || 
+            (invalidPersona.temperature >= 0 && invalidPersona.temperature <= 2);
+
+          // Property: If any required field is missing OR temperature is invalid, validation should fail
+          return !hasRequiredFields || !validTemperature;
         }),
       );
     });
@@ -64,7 +68,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
             deserialized.id === persona.id &&
             deserialized.name === persona.name &&
             deserialized.description === persona.description &&
-            deserialized.systemPrompt === persona.systemPrompt &&
+            deserialized.extraInstructions === persona.extraInstructions &&
             deserialized.knowledgeCategory === persona.knowledgeCategory &&
             Math.abs(deserialized.temperature - persona.temperature) < 0.0001 &&
             deserialized.maxTokens === persona.maxTokens
@@ -91,11 +95,13 @@ describe('Persona Property-Based Tests (Examples)', () => {
             dto.id.length <= 50 &&
             dto.name &&
             dto.name.trim().length > 0 &&
-            dto.systemPrompt &&
-            dto.systemPrompt.length >= 10 &&
             dto.knowledgeCategory;
 
-          return hasRequiredFields;
+          // Property: extraInstructions is optional but if present should be valid
+          const extraInstructionsValid =
+            !dto.extraInstructions || dto.extraInstructions.length >= 10;
+
+          return hasRequiredFields && extraInstructionsValid;
         }),
       );
     });
