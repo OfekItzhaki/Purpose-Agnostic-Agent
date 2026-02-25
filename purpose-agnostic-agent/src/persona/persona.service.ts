@@ -22,26 +22,43 @@ export class PersonaService {
   async loadPersonas(): Promise<void> {
     this.logger.log('Loading personas from database', 'PersonaService');
 
-    const entities = await this.personaRepository.find();
+    try {
+      const entities = await this.personaRepository.find();
+      this.logger.log(
+        `Found ${entities.length} persona entities in database`,
+        'PersonaService',
+      );
 
-    this.personaCache.clear();
-    for (const entity of entities) {
-      const persona: Persona = {
-        id: entity.id,
-        name: entity.name,
-        description: entity.description,
-        extraInstructions: entity.extra_instructions,
-        knowledgeCategory: entity.knowledge_category,
-        temperature: entity.temperature ? Number(entity.temperature) : undefined,
-        maxTokens: entity.max_tokens || undefined,
-      };
-      this.personaCache.set(entity.id, persona);
+      this.personaCache.clear();
+      for (const entity of entities) {
+        this.logger.log(
+          `Processing persona: ${entity.id}`,
+          'PersonaService',
+        );
+        const persona: Persona = {
+          id: entity.id,
+          name: entity.name,
+          description: entity.description,
+          extraInstructions: entity.extra_instructions,
+          knowledgeCategory: entity.knowledge_category,
+          temperature: entity.temperature ? Number(entity.temperature) : undefined,
+          maxTokens: entity.max_tokens || undefined,
+        };
+        this.personaCache.set(entity.id, persona);
+      }
+
+      this.logger.log(
+        `Loaded ${this.personaCache.size} personas into cache`,
+        'PersonaService',
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to load personas: ${error.message}`,
+        error.stack,
+        'PersonaService',
+      );
+      throw error;
     }
-
-    this.logger.log(
-      `Loaded ${this.personaCache.size} personas`,
-      'PersonaService',
-    );
   }
 
   getPersona(agentId: string): Persona | null {
