@@ -30,8 +30,10 @@ async function bootstrap() {
       maxAge: 3600, // Cache preflight requests for 1 hour
     });
 
-    // Set global prefix
-    app.setGlobalPrefix('api');
+    // Set global prefix (exclude health endpoints)
+    app.setGlobalPrefix('api', {
+      exclude: ['health', 'health/ready'],
+    });
 
     // Swagger documentation
     const config = new DocumentBuilder()

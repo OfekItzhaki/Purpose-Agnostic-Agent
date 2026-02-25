@@ -15,7 +15,7 @@ import { CreatePersonaDto } from './dto/create-persona.dto';
 import { Persona } from './interfaces/persona.interface';
 
 @ApiTags('personas')
-@Controller('api/personas')
+@Controller('personas')
 export class PersonaController {
   constructor(private readonly personaService: PersonaService) {}
 

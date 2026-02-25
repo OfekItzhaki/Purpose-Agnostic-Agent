@@ -8,7 +8,7 @@ import { PersonaService } from '../persona/persona.service';
 import { PersonaInfo } from '../persona/interfaces/persona.interface';
 
 @ApiTags('chat')
-@Controller('api')
+@Controller()
 @UseGuards(ThrottlerGuard)
 export class ChatController {
   constructor(
