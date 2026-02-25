@@ -94,4 +94,22 @@ export class ChatController {
   async listAgents(): Promise<PersonaInfo[]> {
     return this.personaService.listPersonas();
   }
+
+  @Post('reload-personas')
+  @ApiOperation({
+    summary: 'Reload personas from database',
+    description: 'Manually reload all personas from the database into cache.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Personas reloaded successfully',
+  })
+  async reloadPersonas(): Promise<{ message: string; count: number }> {
+    await this.personaService.loadPersonas();
+    const personas = this.personaService.listPersonas();
+    return {
+      message: 'Personas reloaded successfully',
+      count: personas.length,
+    };
+  }
 }
