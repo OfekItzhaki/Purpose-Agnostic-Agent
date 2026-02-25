@@ -3,9 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { KnowledgeChunk } from './knowledge-chunk.entity.js';
 
 @Entity('knowledge_documents')
 export class KnowledgeDocument {
@@ -29,7 +27,4 @@ export class KnowledgeDocument {
 
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>;
-
-  @OneToMany(() => KnowledgeChunk, (chunk) => chunk.document)
-  chunks?: KnowledgeChunk[];
 }

@@ -8,7 +8,6 @@ import {
   SearchResult,
 } from '../interfaces/knowledge-chunk.repository.interface.js';
 import { KnowledgeChunk } from '../entities/knowledge-chunk.entity.js';
-import { KnowledgeDocument } from '../entities/knowledge-document.entity.js';
 
 @Injectable()
 export class PostgresKnowledgeChunkRepository
@@ -17,8 +16,6 @@ export class PostgresKnowledgeChunkRepository
   constructor(
     @InjectRepository(KnowledgeChunk)
     private readonly chunkRepository: Repository<KnowledgeChunk>,
-    @InjectRepository(KnowledgeDocument)
-    private readonly documentRepository: Repository<KnowledgeDocument>,
   ) {}
 
   async save(chunk: KnowledgeChunkData): Promise<void> {
@@ -72,7 +69,7 @@ export class PostgresKnowledgeChunkRepository
 
     let query = this.chunkRepository
       .createQueryBuilder('chunk')
-      .leftJoinAndSelect('chunk.document', 'document')
+      .leftJoin('knowledge_documents', 'document', 'document.id = chunk.document_id')
       .select([
         'chunk.id',
         'chunk.content',

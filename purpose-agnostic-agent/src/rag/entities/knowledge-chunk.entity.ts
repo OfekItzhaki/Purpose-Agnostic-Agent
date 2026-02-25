@@ -3,10 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { KnowledgeDocument } from './knowledge-document.entity.js';
 
 @Entity('knowledge_chunks')
 export class KnowledgeChunk {
@@ -30,8 +27,4 @@ export class KnowledgeChunk {
 
   @CreateDateColumn()
   created_at!: Date;
-
-  @ManyToOne(() => KnowledgeDocument, (doc) => doc.chunks)
-  @JoinColumn({ name: 'document_id' })
-  document?: KnowledgeDocument;
 }

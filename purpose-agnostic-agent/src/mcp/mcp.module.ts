@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module, OnModuleInit, forwardRef } from '@nestjs/common';
 import { MCPServerService } from './mcp-server.service';
 import { MCPController } from './mcp.controller';
 import { AskAgentTool } from './tools/ask-agent.tool';
@@ -8,7 +8,7 @@ import { RAGModule } from '../rag/rag.module';
 import { StructuredLogger } from '../common/logger.service';
 
 @Module({
-  imports: [ChatModule, RAGModule],
+  imports: [forwardRef(() => ChatModule), forwardRef(() => RAGModule)],
   controllers: [MCPController],
   providers: [MCPServerService, AskAgentTool, SearchKnowledgeTool, StructuredLogger],
   exports: [MCPServerService],

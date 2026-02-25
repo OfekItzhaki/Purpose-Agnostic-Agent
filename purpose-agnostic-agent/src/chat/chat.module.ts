@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { Pool } from 'pg';
 import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
@@ -11,7 +11,7 @@ import { StructuredLogger } from '../common/logger.service';
 import { RAGSystemPromptService } from '../common/rag-system-prompt.service';
 
 @Module({
-  imports: [PersonaModule, RAGModule, ModelRouterModule],
+  imports: [PersonaModule, forwardRef(() => RAGModule), ModelRouterModule],
   controllers: [ChatController],
   providers: [
     ChatService,
@@ -32,7 +32,14 @@ import { RAGSystemPromptService } from '../common/rag-system-prompt.service';
       },
       inject: ['DATABASE_POOL'],
     },
+    {
+      provide: PostgresSessionRepository,
+      useFactory: (pool: Pool) => {
+        return new PostgresSessionRepository(pool);
+      },
+      inject: ['DATABASE_POOL'],
+    },
   ],
-  exports: [ChatService],
+  exports: [ChatService, PostgresSessionRepository],
 })
 export class ChatModule {}
