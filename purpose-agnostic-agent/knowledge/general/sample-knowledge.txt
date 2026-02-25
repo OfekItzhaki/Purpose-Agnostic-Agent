@@ -1,0 +1,62 @@
+# Sample Knowledge Base Document
+
+This is a sample document for testing the RAG system.
+
+## About NestJS
+
+NestJS is a progressive Node.js framework for building efficient, reliable, and scalable server-side applications. It uses TypeScript by default and combines elements of Object-Oriented Programming (OOP), Functional Programming (FP), and Functional Reactive Programming (FRP).
+
+Key features of NestJS:
+- Built with TypeScript
+- Modular architecture
+- Dependency injection
+- Decorators for clean code
+- Built-in support for testing
+- Microservices support
+- GraphQL and REST API support
+
+## About RAG Systems
+
+Retrieval-Augmented Generation (RAG) is an AI framework that combines information retrieval with text generation. It works by:
+
+1. Retrieving relevant documents from a knowledge base
+2. Using those documents as context for the language model
+3. Generating responses based only on the retrieved context
+
+Benefits of RAG:
+- Reduces hallucinations
+- Provides source citations
+- Enables domain-specific knowledge
+- More cost-effective than fine-tuning
+
+## About Vector Databases
+
+Vector databases store data as high-dimensional vectors (embeddings) that represent semantic meaning. They enable:
+
+- Semantic search (finding similar concepts, not just keywords)
+- Fast similarity search using algorithms like HNSW
+- Efficient storage and retrieval of embeddings
+
+Popular vector databases include:
+- pgvector (PostgreSQL extension)
+- Pinecone
+- Weaviate
+- Qdrant
+- Milvus
+
+## Testing Instructions
+
+To test this knowledge base:
+
+1. Ask: "What is NestJS?"
+   Expected: Should return information about NestJS being a Node.js framework
+
+2. Ask: "How does RAG work?"
+   Expected: Should explain the RAG process with retrieval and generation
+
+3. Ask: "What are vector databases?"
+   Expected: Should describe vector databases and their use cases
+
+4. Ask: "What is the capital of France?"
+   Expected: Should respond with "I don't have enough information in my knowledge base"
+   (This tests RAG-only behavior - the answer is not in this document)
