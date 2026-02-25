@@ -4,10 +4,10 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { createHash } from 'crypto';
-import { PDFParserService } from '../../rag/pdf-parser.service.js';
-import type { EmbeddingService } from '../../rag/interfaces/embedding.service.interface.js';
-import type { KnowledgeChunkRepository } from '../../rag/interfaces/knowledge-chunk.repository.interface.js';
-import { KnowledgeDocument } from '../../rag/entities/knowledge-document.entity.js';
+import { PDFParserService } from '../pdf-parser.service.js';
+import type { EmbeddingService } from '../interfaces/embedding.service.interface.js';
+import type { KnowledgeChunkRepository } from '../interfaces/knowledge-chunk.repository.interface.js';
+import { KnowledgeDocument } from '../entities/knowledge-document.entity.js';
 import { StructuredLogger } from '../../common/logger.service.js';
 import * as fs from 'fs/promises';
 

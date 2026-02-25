@@ -25,5 +25,14 @@
     "knowledgeCategory": "creative",
     "temperature": 0.9,
     "maxTokens": 2000
+  },
+  {
+    "id": "tech-support",
+    "name": "Technical Support Agent",
+    "description": "A friendly technical support agent that helps users with common issues",
+    "extraInstructions": "Be patient and empathetic. Provide step-by-step instructions. Ask clarifying questions when needed. Always maintain a helpful and professional tone.",
+    "knowledgeCategory": "support",
+    "temperature": 0.6,
+    "maxTokens": 1200
   }
 ]
