@@ -416,6 +416,52 @@ docker-compose ps redis
 docker-compose exec redis redis-cli ping
 ```
 
+## Documentation
+
+### API Documentation
+- [API Usage Guide](docs/api/API_USAGE_GUIDE.md) - Complete API reference and examples
+- [Admin API](docs/api/ADMIN_API_README.md) - Admin panel API documentation
+- [Admin API Examples](docs/api/ADMIN_API_EXAMPLES.md) - Admin API usage examples
+- [RFC 7807 Error Format](docs/api/RFC7807_ERROR_FORMAT.md) - Standard error response format
+- [Swagger Documentation](docs/api/SWAGGER_DOCUMENTATION_VERIFICATION.md) - OpenAPI/Swagger setup
+- [API Ready Guide](docs/api/API_READY.md) - API deployment checklist
+
+### Deployment
+- [Deployment Guide](docs/deployment/DEPLOYMENT_GUIDE.md) - Production deployment instructions
+- [Production Checklist](docs/deployment/PRODUCTION_CHECKLIST.md) - Pre-deployment checklist
+- [Production Readiness](docs/deployment/PRODUCTION_READINESS.md) - Production requirements
+- [Security Audit](docs/deployment/SECURITY_AUDIT.md) - Security review and recommendations
+- [Security Setup](docs/deployment/SECURITY_SETUP.md) - Security configuration guide
+- [Observability](docs/deployment/OBSERVABILITY.md) - Monitoring and logging setup
+- [System Ready](docs/deployment/SYSTEM_READY.md) - System verification guide
+- [Deployment Complete](docs/deployment/DEPLOYMENT_COMPLETE.md) - Post-deployment verification
+
+### Development
+- [Migration Guide](docs/development/MIGRATION_GUIDE.md) - Database migration instructions
+- [Manual Testing Guide](docs/development/MANUAL_TESTING_GUIDE.md) - Testing procedures
+- [How to Add Mock Data](docs/development/HOW_TO_ADD_MOCK_DATA.md) - Mock data setup
+- [Secrets Generation](docs/development/SECRETS_GENERATION.md) - Generate secure secrets for production
+
+### Features
+- [RAG-Only Architecture](docs/features/RAG_ONLY_ARCHITECTURE.md) - RAG system architecture details
+- [RAG-Only Implementation](docs/features/RAG_ONLY_IMPLEMENTATION.md) - RAG implementation guide
+- [RAG Quick Start](docs/features/RAG_ONLY_QUICK_START.md) - Quick RAG setup guide
+- [Embedding System](docs/features/EMBEDDING_SYSTEM.md) - Vector embedding details
+- [Knowledge Base Setup](docs/features/KNOWLEDGE_BASE_SETUP.md) - Knowledge ingestion guide
+
+### Troubleshooting
+- [LLM Provider Troubleshooting](docs/troubleshooting/LLM_PROVIDER_TROUBLESHOOTING.md) - LLM provider issues
+- [Google AI Key Troubleshooting](docs/troubleshooting/GOOGLE_AI_KEY_TROUBLESHOOTING.md) - API key issues
+
+### Project Summaries
+- [Complete Implementation Summary](docs/summaries/COMPLETE_IMPLEMENTATION_SUMMARY.md) - Full implementation overview
+- [Implementation Summary](docs/summaries/IMPLEMENTATION_SUMMARY.md) - Feature implementation details
+- [Final Validation Summary](docs/summaries/FINAL_VALIDATION_SUMMARY.md) - Testing and validation results
+- [Cleanup and Ollama Fix](docs/summaries/CLEANUP_AND_OLLAMA_FIX.md) - Recent improvements (Feb 2026)
+- [Project Status](docs/summaries/PROJECT_STATUS.md) - Current project status
+- [Quick Reference](docs/summaries/QUICK_REFERENCE.md) - Quick command reference
+- [Final Checklist](docs/summaries/FINAL_CHECKLIST.md) - Completion checklist
+
 ## License
 
 MIT
