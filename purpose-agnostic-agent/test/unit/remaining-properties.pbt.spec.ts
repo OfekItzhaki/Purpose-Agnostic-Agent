@@ -811,11 +811,11 @@ describe('Remaining Properties', () => {
 
             // Verify all fields are documented
             const allRequestFieldsDocumented = requestFields.every(field =>
-              requestSchema.properties.hasOwnProperty(field)
+              Object.prototype.hasOwnProperty.call(requestSchema.properties, field)
             );
 
             const allResponseFieldsDocumented = responseFields.every(field =>
-              responseSchema.properties.hasOwnProperty(field)
+              Object.prototype.hasOwnProperty.call(responseSchema.properties, field)
             );
 
             return allRequestFieldsDocumented && allResponseFieldsDocumented;
