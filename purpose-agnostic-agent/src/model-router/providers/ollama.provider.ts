@@ -17,7 +17,7 @@ export class OllamaProvider implements LLMProvider {
       this.configService.get<string>('OLLAMA_URL') || 'http://localhost:11434';
     this.httpClient = axios.create({
       baseURL: this.ollamaUrl,
-      timeout: 60000, // 60 second timeout for local inference
+      timeout: 120000, // 120 second timeout for local inference (model loading can take time)
     });
   }
 
@@ -28,7 +28,7 @@ export class OllamaProvider implements LLMProvider {
 
     try {
       const response = await this.httpClient.post('/api/generate', {
-        model: 'llama2',
+        model: 'tinyllama',
         prompt,
         stream: false,
       });
