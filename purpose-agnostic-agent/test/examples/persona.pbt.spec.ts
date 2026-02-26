@@ -1,6 +1,6 @@
 /**
  * Example Property-Based Tests for Persona Module
- * 
+ *
  * This file demonstrates how to write property-based tests using fast-check.
  * These tests validate universal properties that should hold for all inputs.
  */
@@ -17,7 +17,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
   /**
    * Property 10: Invalid Persona Rejection
    * Validates: Requirements 3.2
-   * 
+   *
    * Any persona missing required fields should be rejected with a validation error.
    */
   describe('Property 10: Invalid Persona Rejection', () => {
@@ -29,19 +29,20 @@ describe('Persona Property-Based Tests (Examples)', () => {
           // 1. Call PersonaService.validatePersona(invalidPersona)
           // 2. Assert that it throws a validation error
           // 3. Assert that the error message describes the missing field
-          
+
           const hasRequiredFields =
             invalidPersona.id &&
             invalidPersona.name &&
             invalidPersona.knowledgeCategory;
 
           // Validate temperature if present
-          const validTemperature = 
-            invalidPersona.temperature === undefined || 
-            (invalidPersona.temperature >= 0 && invalidPersona.temperature <= 2);
+          const validTemperature =
+            invalidPersona.temperature === undefined ||
+            (invalidPersona.temperature >= 0 &&
+              invalidPersona.temperature <= 2);
 
           // Property: If any required field is missing OR temperature is invalid, validation should fail
-          return !hasRequiredFields || !validTemperature;
+          return !!(!hasRequiredFields || !validTemperature);
         }),
       );
     });
@@ -50,7 +51,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
   /**
    * Property 21: Persona Configuration Round-Trip
    * Validates: Requirements 10.4
-   * 
+   *
    * Any valid persona should survive serialization and deserialization.
    */
   describe('Property 21: Persona Configuration Round-Trip', () => {
@@ -59,10 +60,10 @@ describe('Persona Property-Based Tests (Examples)', () => {
         fc.property(personaArbitrary(), (persona) => {
           // Serialize to JSON
           const json = JSON.stringify(persona);
-          
+
           // Deserialize back
           const deserialized = JSON.parse(json);
-          
+
           // Property: All fields should be preserved
           return (
             deserialized.id === persona.id &&
@@ -81,7 +82,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
   /**
    * Property 35: Persona Creation Validation
    * Validates: Requirements 19.2
-   * 
+   *
    * CreatePersonaDto should validate all required fields.
    */
   describe('Property 35: Persona Creation Validation', () => {
@@ -101,7 +102,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
           const extraInstructionsValid =
             !dto.extraInstructions || dto.extraInstructions.length >= 10;
 
-          return hasRequiredFields && extraInstructionsValid;
+          return !!(hasRequiredFields && extraInstructionsValid);
         }),
       );
     });
@@ -109,7 +110,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
 
   /**
    * Example: Temperature Bounds
-   * 
+   *
    * Demonstrates testing numeric constraints.
    */
   describe('Temperature Bounds Property', () => {
@@ -125,7 +126,7 @@ describe('Persona Property-Based Tests (Examples)', () => {
 
   /**
    * Example: Max Tokens Bounds
-   * 
+   *
    * Demonstrates testing integer constraints.
    */
   describe('Max Tokens Bounds Property', () => {

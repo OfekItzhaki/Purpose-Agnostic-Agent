@@ -8,20 +8,18 @@ import { StructuredLogger } from '../common/logger.service';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    BullModule.registerQueue(
-      {
-        name: 'embedding-generation',
-        defaultJobOptions: {
-          attempts: 5,
-          backoff: {
-            type: 'exponential',
-            delay: 2000,
-          },
-          removeOnComplete: 100,
-          removeOnFail: 1000,
+    BullModule.registerQueue({
+      name: 'embedding-generation',
+      defaultJobOptions: {
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 2000,
         },
+        removeOnComplete: 100,
+        removeOnFail: 1000,
       },
-    ),
+    }),
     ChatModule,
   ],
   providers: [SessionCleanupProcessor, StructuredLogger],

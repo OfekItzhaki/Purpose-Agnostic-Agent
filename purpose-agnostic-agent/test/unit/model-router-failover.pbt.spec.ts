@@ -3,7 +3,7 @@ import { pbtConfig } from '../pbt.config';
 
 /**
  * Property-Based Tests for Model Router Failover
- * 
+ *
  * These tests validate:
  * - Property 1: Primary Provider Failover
  * - Property 2: Failover Chain Exhaustion
@@ -25,7 +25,7 @@ describe('Model Router Failover Properties', () => {
 
             // Simulate primary failure
             let currentIndex = primaryIndex;
-            let failedProvider = providers[currentIndex];
+            const failedProvider = providers[currentIndex];
 
             // Failover to next provider
             currentIndex++;
@@ -36,7 +36,7 @@ describe('Model Router Failover Properties', () => {
             expect(currentIndex).toBe(primaryIndex + 1);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -47,7 +47,7 @@ describe('Model Router Failover Properties', () => {
           (providerResults) => {
             const providers = ['gemini-pro', 'gpt-4o', 'claude-3.5', 'ollama'];
             let successfulProvider: string | null = null;
-            let attemptedProviders: string[] = [];
+            const attemptedProviders: string[] = [];
 
             // Try each provider until success
             for (let i = 0; i < providers.length; i++) {
@@ -65,13 +65,13 @@ describe('Model Router Failover Properties', () => {
             }
 
             // If any provider succeeded, we should have a successful provider
-            const hasSuccess = providerResults.some(result => result);
+            const hasSuccess = providerResults.some((result) => result);
             if (hasSuccess) {
               expect(successfulProvider).not.toBeNull();
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -80,24 +80,29 @@ describe('Model Router Failover Properties', () => {
         fc.property(
           fc.array(
             fc.record({
-              name: fc.constantFrom('gemini-pro', 'gpt-4o', 'claude-3.5', 'ollama'),
+              name: fc.constantFrom(
+                'gemini-pro',
+                'gpt-4o',
+                'claude-3.5',
+                'ollama',
+              ),
               circuitState: fc.constantFrom('CLOSED', 'OPEN', 'HALF_OPEN'),
             }),
-            { minLength: 4, maxLength: 4 }
+            { minLength: 4, maxLength: 4 },
           ),
           (providers) => {
             // Filter available providers (circuit not OPEN)
             const availableProviders = providers.filter(
-              p => p.circuitState !== 'OPEN'
+              (p) => p.circuitState !== 'OPEN',
             );
 
             // Verify OPEN circuits are skipped
-            availableProviders.forEach(provider => {
+            availableProviders.forEach((provider) => {
               expect(provider.circuitState).not.toBe('OPEN');
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -126,7 +131,7 @@ describe('Model Router Failover Properties', () => {
             expect(successfulProvider).toBeNull();
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -150,7 +155,7 @@ describe('Model Router Failover Properties', () => {
             expect(attemptCount).toBe(providers.length);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -184,10 +189,12 @@ describe('Model Router Failover Properties', () => {
             expect(failoverEvent).toHaveProperty('occurred_at');
 
             // Verify providers are different
-            expect(failoverEvent.successful_provider).not.toBe(failoverEvent.failed_provider);
+            expect(failoverEvent.successful_provider).not.toBe(
+              failoverEvent.failed_provider,
+            );
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -196,11 +203,23 @@ describe('Model Router Failover Properties', () => {
         fc.property(
           fc.array(
             fc.record({
-              failedProvider: fc.constantFrom('gemini-pro', 'gpt-4o', 'claude-3.5'),
-              successfulProvider: fc.constantFrom('gpt-4o', 'claude-3.5', 'ollama'),
-              reason: fc.constantFrom('timeout', '5xx_error', 'connection_refused'),
+              failedProvider: fc.constantFrom(
+                'gemini-pro',
+                'gpt-4o',
+                'claude-3.5',
+              ),
+              successfulProvider: fc.constantFrom(
+                'gpt-4o',
+                'claude-3.5',
+                'ollama',
+              ),
+              reason: fc.constantFrom(
+                'timeout',
+                '5xx_error',
+                'connection_refused',
+              ),
             }),
-            { minLength: 1, maxLength: 3 }
+            { minLength: 1, maxLength: 3 },
           ),
           (failovers) => {
             // Simulate multiple failover events
@@ -218,12 +237,12 @@ describe('Model Router Failover Properties', () => {
             // Verify events are in chronological order
             for (let i = 1; i < events.length; i++) {
               expect(events[i].occurred_at.getTime()).toBeGreaterThanOrEqual(
-                events[i - 1].occurred_at.getTime()
+                events[i - 1].occurred_at.getTime(),
               );
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -256,7 +275,7 @@ describe('Model Router Failover Properties', () => {
             expect(healthStatus.failureCount).toBeGreaterThanOrEqual(0);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -277,7 +296,7 @@ describe('Model Router Failover Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -298,7 +317,7 @@ describe('Model Router Failover Properties', () => {
             expect(failureCount).toBe(0);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -319,7 +338,7 @@ describe('Model Router Failover Properties', () => {
             expect(failureCount).toBe(previousFailures + 1);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -343,7 +362,7 @@ describe('Model Router Failover Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -354,7 +373,7 @@ describe('Model Router Failover Properties', () => {
             'gemini-pro': 30000,
             'gpt-4o': 30000,
             'claude-3.5': 30000,
-            'ollama': 60000,
+            ollama: 60000,
           }),
           (timeouts) => {
             // Verify timeout configuration
@@ -367,7 +386,7 @@ describe('Model Router Failover Properties', () => {
             expect(timeouts['ollama']).toBeGreaterThan(timeouts['gemini-pro']);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 /**
  * RAG-Only System Prompt Service
- * 
+ *
  * This service provides the shared, immutable system prompt that enforces
  * RAG-only behavior. Personas can only customize style/tone via extra_instructions,
  * but cannot override the core RAG-only rules.
@@ -29,7 +29,7 @@ Your role is to be a reliable, context-bound assistant that users can trust to o
    * Builds the complete system prompt by combining:
    * 1. Core RAG-only rules (immutable)
    * 2. Persona's extra instructions (style/tone only)
-   * 
+   *
    * @param extraInstructions Optional persona-specific instructions for style/tone
    * @returns Complete system prompt
    */
@@ -49,7 +49,7 @@ Remember: These style instructions do NOT override the core RAG-only rules above
   /**
    * Builds the user message with context and question.
    * This enforces the retrieval-first flow structure.
-   * 
+   *
    * @param context Retrieved context from RAG system
    * @param question User's question
    * @returns Formatted user message

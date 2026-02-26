@@ -3,7 +3,7 @@ import { pbtConfig } from '../pbt.config';
 
 /**
  * Property-Based Tests for RAG System
- * 
+ *
  * These tests validate:
  * - Property 5: Category Tagging from Folder Structure
  * - Property 6: Embedding Generation and Storage
@@ -14,23 +14,32 @@ describe('RAG System Properties', () => {
     it('should extract category from folder path', () => {
       fc.assert(
         fc.property(
-          fc.constantFrom('general', 'technical', 'creative', 'support', 'legal'),
-          fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('/')),
+          fc.constantFrom(
+            'general',
+            'technical',
+            'creative',
+            'support',
+            'legal',
+          ),
+          fc
+            .string({ minLength: 1, maxLength: 50 })
+            .filter((s) => !s.includes('/')),
           (category, filename) => {
             const folderPath = `/knowledge/${category}/${filename}`;
 
             // Extract category from path
             const pathParts = folderPath.split('/');
             const knowledgeIndex = pathParts.indexOf('knowledge');
-            const extractedCategory = knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
-              ? pathParts[knowledgeIndex + 1]
-              : 'unknown';
+            const extractedCategory =
+              knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
+                ? pathParts[knowledgeIndex + 1]
+                : 'unknown';
 
             // Verify category extraction
             expect(extractedCategory).toBe(category);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -38,43 +47,54 @@ describe('RAG System Properties', () => {
       fc.assert(
         fc.property(
           fc.constantFrom('general', 'technical', 'creative'),
-          fc.array(fc.string({ minLength: 1, maxLength: 20 }).filter(s => !s.includes('/')), { minLength: 1, maxLength: 3 }),
-          fc.string({ minLength: 1, maxLength: 50 }).filter(s => !s.includes('/')),
+          fc.array(
+            fc
+              .string({ minLength: 1, maxLength: 20 })
+              .filter((s) => !s.includes('/')),
+            { minLength: 1, maxLength: 3 },
+          ),
+          fc
+            .string({ minLength: 1, maxLength: 50 })
+            .filter((s) => !s.includes('/')),
           (category, subfolders, filename) => {
             const folderPath = `/knowledge/${category}/${subfolders.join('/')}/${filename}`;
 
             // Extract category (should be first folder after /knowledge/)
             const pathParts = folderPath.split('/');
             const knowledgeIndex = pathParts.indexOf('knowledge');
-            const extractedCategory = knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
-              ? pathParts[knowledgeIndex + 1]
-              : 'unknown';
+            const extractedCategory =
+              knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
+                ? pathParts[knowledgeIndex + 1]
+                : 'unknown';
 
             // Category should always be the immediate subfolder of /knowledge/
             expect(extractedCategory).toBe(category);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
     it('should handle paths without knowledge folder', () => {
       fc.assert(
         fc.property(
-          fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('knowledge')),
+          fc
+            .string({ minLength: 1, maxLength: 100 })
+            .filter((s) => !s.includes('knowledge')),
           (path) => {
             // Extract category from path without /knowledge/
             const pathParts = path.split('/');
             const knowledgeIndex = pathParts.indexOf('knowledge');
-            const extractedCategory = knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
-              ? pathParts[knowledgeIndex + 1]
-              : 'unknown';
+            const extractedCategory =
+              knowledgeIndex >= 0 && pathParts.length > knowledgeIndex + 1
+                ? pathParts[knowledgeIndex + 1]
+                : 'unknown';
 
             // Should default to 'unknown' when no knowledge folder
             expect(extractedCategory).toBe('unknown');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -95,12 +115,12 @@ describe('RAG System Properties', () => {
             }
 
             // Verify all chunks have the same category
-            chunks.forEach(chunk => {
+            chunks.forEach((chunk) => {
               expect(chunk.category).toBe(category);
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -113,46 +133,53 @@ describe('RAG System Properties', () => {
           fc.constantFrom(1536, 768, 384), // Common embedding dimensions
           (text, expectedDimensions) => {
             // Simulate embedding generation
-            const embedding = new Array(expectedDimensions).fill(0).map(() => Math.random());
+            const embedding = new Array(expectedDimensions)
+              .fill(0)
+              .map(() => Math.random());
 
             // Verify dimensions
             expect(embedding.length).toBe(expectedDimensions);
 
             // Verify all values are numbers
-            embedding.forEach(value => {
+            embedding.forEach((value) => {
               expect(typeof value).toBe('number');
               expect(isNaN(value)).toBe(false);
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
     it('should normalize embedding vectors', () => {
       fc.assert(
         fc.property(
-          fc.array(fc.float({ min: -10, max: 10 }), { minLength: 100, maxLength: 1536 })
-            .filter(arr => arr.some(val => !isNaN(val) && isFinite(val))), // Filter out all-NaN or all-infinite arrays
+          fc
+            .array(fc.float({ min: -10, max: 10 }), {
+              minLength: 100,
+              maxLength: 1536,
+            })
+            .filter((arr) => arr.some((val) => !isNaN(val) && isFinite(val))), // Filter out all-NaN or all-infinite arrays
           (rawEmbedding) => {
             // Filter out NaN and infinite values
-            const cleanEmbedding = rawEmbedding.map(val => 
-              isNaN(val) || !isFinite(val) ? 0 : val
+            const cleanEmbedding = rawEmbedding.map((val) =>
+              isNaN(val) || !isFinite(val) ? 0 : val,
             );
 
             // Calculate magnitude
             const magnitude = Math.sqrt(
-              cleanEmbedding.reduce((sum, val) => sum + val * val, 0)
+              cleanEmbedding.reduce((sum, val) => sum + val * val, 0),
             );
 
             // Normalize
-            const normalized = magnitude > 0
-              ? cleanEmbedding.map(val => val / magnitude)
-              : cleanEmbedding;
+            const normalized =
+              magnitude > 0
+                ? cleanEmbedding.map((val) => val / magnitude)
+                : cleanEmbedding;
 
             // Calculate normalized magnitude
             const normalizedMagnitude = Math.sqrt(
-              normalized.reduce((sum, val) => sum + val * val, 0)
+              normalized.reduce((sum, val) => sum + val * val, 0),
             );
 
             // Verify magnitude is approximately 1 (or 0 if original was zero vector)
@@ -163,7 +190,7 @@ describe('RAG System Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -195,14 +222,17 @@ describe('RAG System Properties', () => {
             expect(storedChunk.metadata.chunkIndex).toBe(chunkIndex);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
     it('should handle batch embedding generation', () => {
       fc.assert(
         fc.property(
-          fc.array(fc.string({ minLength: 10, maxLength: 200 }), { minLength: 1, maxLength: 50 }),
+          fc.array(fc.string({ minLength: 10, maxLength: 200 }), {
+            minLength: 1,
+            maxLength: 50,
+          }),
           fc.integer({ min: 1, max: 10 }), // batch size
           (texts, batchSize) => {
             // Simulate batch processing
@@ -212,7 +242,10 @@ describe('RAG System Properties', () => {
             }
 
             // Verify batching
-            const totalProcessed = batches.reduce((sum, batch) => sum + batch.length, 0);
+            const totalProcessed = batches.reduce(
+              (sum, batch) => sum + batch.length,
+              0,
+            );
             expect(totalProcessed).toBe(texts.length);
 
             // Verify batch sizes
@@ -226,39 +259,57 @@ describe('RAG System Properties', () => {
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
     it('should calculate cosine similarity correctly', () => {
       fc.assert(
         fc.property(
-          fc.array(fc.float({ min: -1, max: 1, noNaN: true }), { minLength: 10, maxLength: 100 }),
-          fc.array(fc.float({ min: -1, max: 1, noNaN: true }), { minLength: 10, maxLength: 100 }),
+          fc.array(fc.float({ min: -1, max: 1, noNaN: true }), {
+            minLength: 10,
+            maxLength: 100,
+          }),
+          fc.array(fc.float({ min: -1, max: 1, noNaN: true }), {
+            minLength: 10,
+            maxLength: 100,
+          }),
           (vec1, vec2) => {
             fc.pre(vec1.length === vec2.length); // Vectors must be same length
 
             // Calculate cosine similarity
-            const dotProduct = vec1.reduce((sum, val, i) => sum + val * vec2[i], 0);
-            const mag1 = Math.sqrt(vec1.reduce((sum, val) => sum + val * val, 0));
-            const mag2 = Math.sqrt(vec2.reduce((sum, val) => sum + val * val, 0));
+            const dotProduct = vec1.reduce(
+              (sum, val, i) => sum + val * vec2[i],
+              0,
+            );
+            const mag1 = Math.sqrt(
+              vec1.reduce((sum, val) => sum + val * val, 0),
+            );
+            const mag2 = Math.sqrt(
+              vec2.reduce((sum, val) => sum + val * val, 0),
+            );
 
-            const similarity = mag1 > 0 && mag2 > 0 ? dotProduct / (mag1 * mag2) : 0;
+            const similarity =
+              mag1 > 0 && mag2 > 0 ? dotProduct / (mag1 * mag2) : 0;
 
             // Verify similarity is in valid range [-1, 1]
             expect(similarity).toBeGreaterThanOrEqual(-1.0);
             expect(similarity).toBeLessThanOrEqual(1.0);
 
             // Verify self-similarity is 1 for non-zero vectors
-            if (mag1 > 0.01) { // Only check for vectors with meaningful magnitude
-              const selfDotProduct = vec1.reduce((sum, val) => sum + val * val, 0);
+            if (mag1 > 0.01) {
+              // Only check for vectors with meaningful magnitude
+              const selfDotProduct = vec1.reduce(
+                (sum, val) => sum + val * val,
+                0,
+              );
               const selfSimilarity = selfDotProduct / (mag1 * mag1);
               // Self-similarity should be exactly 1
               expect(Math.abs(selfSimilarity - 1.0)).toBeLessThan(0.0001);
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });

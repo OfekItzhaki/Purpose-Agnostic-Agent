@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, MaxLength, IsUUID, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  MaxLength,
+  IsUUID,
+  IsOptional,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import sanitizeHtml from 'sanitize-html';
@@ -12,7 +18,9 @@ export class ChatRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  @Transform(({ value }) => sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} }))
+  @Transform(({ value }) =>
+    sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} }),
+  )
   agent_id: string;
 
   @ApiProperty({
@@ -23,7 +31,9 @@ export class ChatRequestDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(5000)
-  @Transform(({ value }) => sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} }))
+  @Transform(({ value }) =>
+    sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} }),
+  )
   question: string;
 
   @ApiProperty({

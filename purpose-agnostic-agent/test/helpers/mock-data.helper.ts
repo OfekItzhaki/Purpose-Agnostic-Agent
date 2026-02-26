@@ -80,10 +80,14 @@ export function createMockPersona(overrides: Partial<typeof mockPersona> = {}) {
   return { ...mockPersona, ...overrides };
 }
 
-export function createMockChatRequest(overrides: Partial<typeof mockChatRequest> = {}) {
+export function createMockChatRequest(
+  overrides: Partial<typeof mockChatRequest> = {},
+) {
   return { ...mockChatRequest, ...overrides };
 }
 
-export function createMockSearchResult(overrides: Partial<typeof mockSearchResult> = {}) {
+export function createMockSearchResult(
+  overrides: Partial<typeof mockSearchResult> = {},
+) {
   return { ...mockSearchResult, ...overrides };
 }

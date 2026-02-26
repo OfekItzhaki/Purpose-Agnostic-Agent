@@ -207,13 +207,19 @@ Sample knowledge is available in `knowledge/general/sample-knowledge.txt` coveri
 
 ## ⚠️ Important Notes
 
-### API Key Issue
-The Google AI API key in `.env` may need to be updated if you get 401 errors. The current key might be expired or invalid.
+### Embedding System - Now Free!
+The system now uses **Ollama for embeddings** (completely free, no API key needed). It automatically falls back to OpenAI if Ollama fails.
 
-**To fix:**
-1. Get a new API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Update `GOOGLE_AI_API_KEY` in `.env`
-3. Restart API: `docker-compose restart api`
+**Configuration:**
+- `EMBEDDING_PROVIDERS=ollama,openai` - Priority order (tries Ollama first)
+- Ollama uses `nomic-embed-text` model (768 dimensions)
+- OpenAI fallback uses `text-embedding-3-small` (1536 dimensions)
+
+### LLM Provider Required
+You need at least one LLM provider API key for chat responses:
+- **Google AI (Gemini)** - Recommended, free tier available at [Google AI Studio](https://makersuite.google.com/app/apikey)
+- **OpenRouter** - For GPT-4o and Claude-3.5 at [OpenRouter](https://openrouter.ai/keys)
+- **Ollama** - Local llama2 model (slow but free)
 
 ### RAG-Only Behavior
 The system will ONLY answer questions based on indexed documents. If the knowledge base doesn't contain relevant information, it responds:

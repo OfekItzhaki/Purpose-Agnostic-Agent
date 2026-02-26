@@ -1,6 +1,6 @@
 /**
  * Property-Based Testing Configuration
- * 
+ *
  * This file configures fast-check for property-based testing across the application.
  * All property tests should use these settings for consistency.
  */
@@ -9,7 +9,7 @@ import * as fc from 'fast-check';
 
 /**
  * Standard configuration for property-based tests
- * 
+ *
  * - numRuns: 100+ iterations per property test (requirement 17.1)
  * - seed: Enables reproducibility (requirement 17.2)
  * - endOnFailure: Stop on first failure for faster feedback
@@ -43,12 +43,12 @@ export const pbtConfigSmoke: fc.Parameters<unknown> = {
 
 /**
  * Helper function to run a property test with standard configuration
- * 
+ *
  * @example
  * ```typescript
  * import { runPropertyTest } from '@test/pbt.config';
  * import * as fc from 'fast-check';
- * 
+ *
  * it('should satisfy property', () => {
  *   runPropertyTest(
  *     fc.property(fc.integer(), (n) => {

@@ -5,14 +5,18 @@ export class PrometheusMetricsProvider implements MetricsProvider {
   private counters = new Map<string, Counter>();
   private histograms = new Map<string, Histogram>();
 
-  recordMetric(name: string, value: number, labels?: Record<string, string>): void {
+  recordMetric(
+    name: string,
+    value: number,
+    labels?: Record<string, string>,
+  ): void {
     // For Prometheus, we typically use histograms for metrics
     this.recordHistogram(name, value, labels);
   }
 
   incrementCounter(name: string, labels?: Record<string, string>): void {
     let counter = this.counters.get(name);
-    
+
     if (!counter) {
       counter = new Counter({
         name,
@@ -29,9 +33,13 @@ export class PrometheusMetricsProvider implements MetricsProvider {
     }
   }
 
-  recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
+  recordHistogram(
+    name: string,
+    value: number,
+    labels?: Record<string, string>,
+  ): void {
     let histogram = this.histograms.get(name);
-    
+
     if (!histogram) {
       histogram = new Histogram({
         name,

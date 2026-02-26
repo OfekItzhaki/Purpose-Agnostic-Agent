@@ -3,7 +3,7 @@ import { pbtConfig } from '../pbt.config';
 
 /**
  * Property-Based Tests for MCP Tools
- * 
+ *
  * These tests validate:
  * - Property 14: MCP Response Structure
  * - Property 15: MCP Error Handling
@@ -30,7 +30,7 @@ describe('MCP Tools Properties', () => {
             expect(response).toHaveProperty('result');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -44,7 +44,7 @@ describe('MCP Tools Properties', () => {
               content: fc.string({ minLength: 10, maxLength: 500 }),
               score: fc.float({ min: 0, max: 1 }),
             }),
-            { minLength: 0, maxLength: 5 }
+            { minLength: 0, maxLength: 5 },
           ),
           fc.constantFrom('gpt-4o', 'claude-3.5', 'gemini-pro'),
           fc.uuid(),
@@ -70,7 +70,7 @@ describe('MCP Tools Properties', () => {
             expect(typeof toolResult.sessionId).toBe('string');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -87,7 +87,7 @@ describe('MCP Tools Properties', () => {
               chunkIndex: fc.integer({ min: 0, max: 100 }),
               score: fc.float({ min: 0, max: 1 }),
             }),
-            { minLength: 0, maxLength: 10 }
+            { minLength: 0, maxLength: 10 },
           ),
           (query, category, results) => {
             // Simulate search_knowledge tool response
@@ -95,7 +95,7 @@ describe('MCP Tools Properties', () => {
               query,
               category,
               resultCount: results.length,
-              results: results.map(r => ({
+              results: results.map((r) => ({
                 content: r.content,
                 sourcePath: r.sourcePath,
                 category: r.category,
@@ -114,7 +114,7 @@ describe('MCP Tools Properties', () => {
             expect(toolResult.resultCount).toBe(results.length);
 
             // Verify each result has required fields
-            toolResult.results.forEach(result => {
+            toolResult.results.forEach((result) => {
               expect(result).toHaveProperty('content');
               expect(result).toHaveProperty('sourcePath');
               expect(result).toHaveProperty('category');
@@ -123,7 +123,7 @@ describe('MCP Tools Properties', () => {
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -147,14 +147,14 @@ describe('MCP Tools Properties', () => {
             expect(toolResult.content.length).toBeGreaterThan(0);
 
             // Verify content item structure
-            toolResult.content.forEach(item => {
+            toolResult.content.forEach((item) => {
               expect(item).toHaveProperty('type');
               expect(item).toHaveProperty('text');
               expect(item.type).toBe('text');
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -188,7 +188,7 @@ describe('MCP Tools Properties', () => {
             expect(errorResponse.error.code).toBeGreaterThanOrEqual(-32768);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -213,7 +213,7 @@ describe('MCP Tools Properties', () => {
             expect(toolResult.content[0].text).toContain('Error:');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -221,13 +221,19 @@ describe('MCP Tools Properties', () => {
       fc.assert(
         fc.property(
           fc.record({
-            agent_id: fc.option(fc.string({ minLength: 1, maxLength: 50 }), { nil: undefined }),
-            question: fc.option(fc.string({ minLength: 1, maxLength: 200 }), { nil: undefined }),
+            agent_id: fc.option(fc.string({ minLength: 1, maxLength: 50 }), {
+              nil: undefined,
+            }),
+            question: fc.option(fc.string({ minLength: 1, maxLength: 200 }), {
+              nil: undefined,
+            }),
           }),
           (args) => {
             // Validate required parameters
-            const hasAgentId = args.agent_id !== undefined && args.agent_id !== null;
-            const hasQuestion = args.question !== undefined && args.question !== null;
+            const hasAgentId =
+              args.agent_id !== undefined && args.agent_id !== null;
+            const hasQuestion =
+              args.question !== undefined && args.question !== null;
 
             const isValid = hasAgentId && hasQuestion;
 
@@ -247,7 +253,7 @@ describe('MCP Tools Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -275,7 +281,7 @@ describe('MCP Tools Properties', () => {
             expect(errorResult.content[0].text).toContain(errorMessage);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -306,7 +312,7 @@ describe('MCP Tools Properties', () => {
             expect(errorResponse.error.code).toBeGreaterThanOrEqual(-32768);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -340,7 +346,7 @@ describe('MCP Tools Properties', () => {
             expect(toolDefinition.inputSchema).toHaveProperty('required');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -352,17 +358,17 @@ describe('MCP Tools Properties', () => {
               name: fc.string({ minLength: 1, maxLength: 50 }),
               description: fc.string({ minLength: 10, maxLength: 200 }),
             }),
-            { minLength: 1, maxLength: 10 }
+            { minLength: 1, maxLength: 10 },
           ),
           (tools) => {
             // Ensure unique tool names
             const uniqueTools = Array.from(
-              new Map(tools.map(t => [t.name, t])).values()
+              new Map(tools.map((t) => [t.name, t])).values(),
             );
 
             // Simulate tools/list response
             const listResponse = {
-              tools: uniqueTools.map(tool => ({
+              tools: uniqueTools.map((tool) => ({
                 name: tool.name,
                 description: tool.description,
                 inputSchema: {
@@ -377,14 +383,14 @@ describe('MCP Tools Properties', () => {
             expect(listResponse.tools.length).toBe(uniqueTools.length);
 
             // Verify each tool has required fields
-            listResponse.tools.forEach(tool => {
+            listResponse.tools.forEach((tool) => {
               expect(tool).toHaveProperty('name');
               expect(tool).toHaveProperty('description');
               expect(tool).toHaveProperty('inputSchema');
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });

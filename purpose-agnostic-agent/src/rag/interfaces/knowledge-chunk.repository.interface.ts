@@ -30,9 +30,6 @@ export interface KnowledgeChunkRepository {
   save(chunk: KnowledgeChunkData): Promise<void>;
   saveBatch(chunks: KnowledgeChunkData[]): Promise<void>;
   findByDocumentId(documentId: string): Promise<KnowledgeChunkData[]>;
-  search(
-    embedding: number[],
-    options: SearchOptions,
-  ): Promise<SearchResult[]>;
+  search(embedding: number[], options: SearchOptions): Promise<SearchResult[]>;
   deleteByDocumentId(documentId: string): Promise<void>;
 }

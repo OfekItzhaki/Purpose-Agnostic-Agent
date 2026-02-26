@@ -24,7 +24,8 @@ export class UsageTrackerService {
 
   constructor(private readonly configService: ConfigService) {
     // Load limits from environment or disable tracking
-    this.ENABLED = this.configService.get<string>('USAGE_TRACKING_ENABLED') === 'true';
+    this.ENABLED =
+      this.configService.get<string>('USAGE_TRACKING_ENABLED') === 'true';
     this.DAILY_REQUEST_LIMIT = parseInt(
       this.configService.get<string>('DAILY_REQUEST_LIMIT') || '999999',
       10,
@@ -102,7 +103,7 @@ export class UsageTrackerService {
     }
 
     const stats = this.getOrCreateStats(provider);
-    
+
     stats.requestCount++;
     stats.tokenCount += tokensUsed;
     this.rpmCounter++;
@@ -151,7 +152,7 @@ export class UsageTrackerService {
   private shouldResetDaily(lastReset: Date): boolean {
     const now = new Date();
     const resetDate = new Date(lastReset);
-    
+
     // Reset if it's a new day
     return (
       now.getDate() !== resetDate.getDate() ||

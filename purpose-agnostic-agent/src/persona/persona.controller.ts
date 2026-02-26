@@ -9,7 +9,13 @@ import {
   HttpStatus,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 import { PersonaService } from './persona.service';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { Persona } from './interfaces/persona.interface';
@@ -23,7 +29,8 @@ export class PersonaController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create a new persona',
-    description: 'Create a new agent persona with custom system prompt and knowledge category.',
+    description:
+      'Create a new agent persona with custom system prompt and knowledge category.',
   })
   @ApiBody({ type: CreatePersonaDto })
   @ApiResponse({

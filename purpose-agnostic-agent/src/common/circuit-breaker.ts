@@ -87,8 +87,7 @@ export class CircuitBreaker {
   private shouldAttemptReset(): boolean {
     if (!this.lastFailureTime) return false;
 
-    const timeSinceLastFailure =
-      Date.now() - this.lastFailureTime.getTime();
+    const timeSinceLastFailure = Date.now() - this.lastFailureTime.getTime();
     return timeSinceLastFailure >= this.config.resetTimeout;
   }
 

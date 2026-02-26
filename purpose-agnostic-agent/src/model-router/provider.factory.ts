@@ -30,7 +30,12 @@ export class LLMProviderFactory {
   }
 
   getAllProviders(): LLMProvider[] {
-    return [this.geminiProvider, this.gpt4Provider, this.claudeProvider, this.ollamaProvider];
+    return [
+      this.geminiProvider,
+      this.gpt4Provider,
+      this.claudeProvider,
+      this.ollamaProvider,
+    ];
   }
 
   getProvidersByTier(): Map<string, LLMProvider[]> {

@@ -1,4 +1,9 @@
-import { Module, ValidationPipe, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import {
+  Module,
+  ValidationPipe,
+  MiddlewareConsumer,
+  NestModule,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -15,6 +20,7 @@ import { ChatModule } from './chat/chat.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { HealthModule } from './health/health.module.js';
 import { MCPModule } from './mcp/mcp.module.js';
+import { AdminModule } from './admin/admin.module.js';
 
 @Module({
   imports: [
@@ -57,6 +63,7 @@ import { MCPModule } from './mcp/mcp.module.js';
     JobsModule,
     HealthModule,
     MCPModule,
+    AdminModule,
   ],
   providers: [
     // Global validation pipe

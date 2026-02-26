@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS knowledge_chunks (
   document_id UUID NOT NULL REFERENCES knowledge_documents(id) ON DELETE CASCADE,
   chunk_index INTEGER NOT NULL,
   content TEXT NOT NULL,
-  embedding vector(1536) NOT NULL,
+  embedding vector(768) NOT NULL,  -- 768 dimensions for Ollama (nomic-embed-text), 1536 for OpenAI
   token_count INTEGER NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   UNIQUE(document_id, chunk_index)

@@ -15,6 +15,8 @@ services:
       - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - EMBEDDING_PROVIDERS=${EMBEDDING_PROVIDERS:-ollama,openai}
+      - OLLAMA_EMBEDDING_MODEL=${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
       - OLLAMA_URL=http://ollama:11434
       # Optional observability endpoints (can be replaced)
       - SEQ_URL=${SEQ_URL:-}

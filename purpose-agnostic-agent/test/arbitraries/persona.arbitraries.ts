@@ -37,15 +37,17 @@ export const personaArbitrary = (): fc.Arbitrary<{
 /**
  * Generate invalid Persona objects (missing required fields)
  */
-export const invalidPersonaArbitrary = (): fc.Arbitrary<Partial<{
-  id: string;
-  name: string;
-  description: string;
-  extraInstructions: string | null;
-  knowledgeCategory: string;
-  temperature: number;
-  maxTokens: number;
-}>> =>
+export const invalidPersonaArbitrary = (): fc.Arbitrary<
+  Partial<{
+    id: string;
+    name: string;
+    description: string;
+    extraInstructions: string | null;
+    knowledgeCategory: string;
+    temperature: number;
+    maxTokens: number;
+  }>
+> =>
   fc.oneof(
     // Missing id
     fc.record({
@@ -111,14 +113,16 @@ export const createPersonaDtoArbitrary = (): fc.Arbitrary<{
 /**
  * Generate UpdatePersonaDto objects (RAG-only architecture)
  */
-export const updatePersonaDtoArbitrary = (): fc.Arbitrary<Partial<{
-  name: string;
-  description: string;
-  extraInstructions: string | null;
-  knowledgeCategory: string;
-  temperature: number;
-  maxTokens: number;
-}>> =>
+export const updatePersonaDtoArbitrary = (): fc.Arbitrary<
+  Partial<{
+    name: string;
+    description: string;
+    extraInstructions: string | null;
+    knowledgeCategory: string;
+    temperature: number;
+    maxTokens: number;
+  }>
+> =>
   fc.record(
     {
       name: fc.option(personaNameArbitrary(), { nil: undefined }),

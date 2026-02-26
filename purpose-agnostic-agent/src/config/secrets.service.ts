@@ -24,7 +24,10 @@ export class SecretsService implements OnModuleInit {
   }
 
   private async loadSecrets(): Promise<void> {
-    const secretsProvider = this.configService.get<string>('SECRETS_PROVIDER', 'env');
+    const secretsProvider = this.configService.get<string>(
+      'SECRETS_PROVIDER',
+      'env',
+    );
 
     this.logger.logWithContext('info', 'Loading secrets', {
       provider: secretsProvider,
@@ -53,13 +56,18 @@ export class SecretsService implements OnModuleInit {
 
   private loadFromEnv(): SecretsConfig {
     return {
-      jwtSecret: this.configService.get<string>('JWT_SECRET', 'change-me-in-production'),
+      jwtSecret: this.configService.get<string>(
+        'JWT_SECRET',
+        'change-me-in-production',
+      ),
       databaseUrl: this.configService.get<string>('DATABASE_URL')!,
       redisUrl: this.configService.get<string>('REDIS_URL')!,
       googleAiApiKey: this.configService.get<string>('GOOGLE_AI_API_KEY')!,
       openaiApiKey: this.configService.get<string>('OPENAI_API_KEY')!,
       openRouterApiKey: this.configService.get<string>('OPENROUTER_API_KEY'),
-      apiKeys: (this.configService.get<string>('API_KEYS', '') || '').split(',').filter(Boolean),
+      apiKeys: (this.configService.get<string>('API_KEYS', '') || '')
+        .split(',')
+        .filter(Boolean),
     };
   }
 
@@ -68,18 +76,25 @@ export class SecretsService implements OnModuleInit {
     // Requires: npm install @aws-sdk/client-secrets-manager
     try {
       // @ts-ignore - Optional dependency
-      const AWS = await import('@aws-sdk/client-secrets-manager').catch(() => null);
-      
+      const AWS = await import('@aws-sdk/client-secrets-manager').catch(
+        () => null,
+      );
+
       if (!AWS) {
-        throw new Error('@aws-sdk/client-secrets-manager not installed. Run: npm install @aws-sdk/client-secrets-manager');
+        throw new Error(
+          '@aws-sdk/client-secrets-manager not installed. Run: npm install @aws-sdk/client-secrets-manager',
+        );
       }
 
       const client = new AWS.SecretsManagerClient({
         region: this.configService.get<string>('AWS_REGION', 'us-east-1'),
       });
 
-      const secretName = this.configService.get<string>('AWS_SECRET_NAME', 'purpose-agnostic-agent/prod');
-      
+      const secretName = this.configService.get<string>(
+        'AWS_SECRET_NAME',
+        'purpose-agnostic-agent/prod',
+      );
+
       const response = await client.send(
         new AWS.GetSecretValueCommand({ SecretId: secretName }),
       );
@@ -113,7 +128,9 @@ export class SecretsService implements OnModuleInit {
       const Identity = await import('@azure/identity').catch(() => null);
 
       if (!Azure || !Identity) {
-        throw new Error('@azure/keyvault-secrets or @azure/identity not installed. Run: npm install @azure/keyvault-secrets @azure/identity');
+        throw new Error(
+          '@azure/keyvault-secrets or @azure/identity not installed. Run: npm install @azure/keyvault-secrets @azure/identity',
+        );
       }
 
       const vaultUrl = this.configService.get<string>('AZURE_KEY_VAULT_URL')!;
@@ -134,7 +151,9 @@ export class SecretsService implements OnModuleInit {
         client.getSecret('REDIS-URL'),
         client.getSecret('GOOGLE-AI-API-KEY'),
         client.getSecret('OPENAI-API-KEY'),
-        client.getSecret('OPENROUTER-API-KEY').catch(() => ({ value: undefined })),
+        client
+          .getSecret('OPENROUTER-API-KEY')
+          .catch(() => ({ value: undefined })),
         client.getSecret('API-KEYS'),
       ]);
 
@@ -161,17 +180,25 @@ export class SecretsService implements OnModuleInit {
     try {
       // @ts-ignore - Optional dependency
       const vault = await import('node-vault').catch(() => null);
-      
+
       if (!vault) {
-        throw new Error('node-vault not installed. Run: npm install node-vault');
+        throw new Error(
+          'node-vault not installed. Run: npm install node-vault',
+        );
       }
 
-      const client = (vault as any).default({
-        endpoint: this.configService.get<string>('VAULT_ADDR', 'http://localhost:8200'),
+      const client = vault.default({
+        endpoint: this.configService.get<string>(
+          'VAULT_ADDR',
+          'http://localhost:8200',
+        ),
         token: this.configService.get<string>('VAULT_TOKEN'),
       });
 
-      const secretPath = this.configService.get<string>('VAULT_SECRET_PATH', 'secret/data/purpose-agnostic-agent');
+      const secretPath = this.configService.get<string>(
+        'VAULT_SECRET_PATH',
+        'secret/data/purpose-agnostic-agent',
+      );
       const response = await client.read(secretPath);
       const secrets = response.data.data;
 

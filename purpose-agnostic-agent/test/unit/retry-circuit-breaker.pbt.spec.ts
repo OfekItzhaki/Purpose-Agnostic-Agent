@@ -3,7 +3,7 @@ import { pbtConfig } from '../pbt.config';
 
 /**
  * Property-Based Tests for Retry and Circuit Breaker
- * 
+ *
  * These tests validate:
  * - Property 30: Exponential Backoff Retry Timing
  * - Property 41: Circuit Breaker Opens on Repeated Failures
@@ -42,7 +42,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -70,7 +70,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(attemptCount).toBe(maxRetries);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -108,7 +108,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(failureCount).toBeGreaterThanOrEqual(failureThreshold);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -132,7 +132,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(rejectedCount).toBe(requestCount);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -172,7 +172,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(circuitState).toBe('HALF_OPEN');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -208,7 +208,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -242,7 +242,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(successfulRequests).toBe(successCount);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -265,7 +265,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(circuitState).toBe('CLOSED');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -285,7 +285,7 @@ describe('Retry and Circuit Breaker Properties', () => {
             expect(circuitState).toBe('OPEN');
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });

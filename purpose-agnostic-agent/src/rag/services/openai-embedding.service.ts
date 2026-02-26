@@ -61,7 +61,9 @@ export class OpenAIEmbeddingService implements EmbeddingService {
           input: batch,
         });
 
-        const embeddings = response.data.data.map((item: any) => item.embedding);
+        const embeddings = response.data.data.map(
+          (item: any) => item.embedding,
+        );
         results.push(...embeddings);
 
         // Rate limiting: wait 1 second between batches

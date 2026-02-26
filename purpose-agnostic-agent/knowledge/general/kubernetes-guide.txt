@@ -1,0 +1,127 @@
+Kubernetes Guide
+
+What is Kubernetes?
+Kubernetes (K8s) is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications.
+
+Core Concepts:
+
+1. Cluster:
+A set of machines (nodes) that run containerized applications managed by Kubernetes.
+
+2. Node:
+A worker machine in Kubernetes. Can be a physical or virtual machine. Each node contains:
+- Kubelet: Agent that ensures containers are running
+- Container runtime: Software for running containers (e.g., Docker)
+- Kube-proxy: Network proxy
+
+3. Pod:
+The smallest deployable unit in Kubernetes. A pod can contain one or more containers that share:
+- Network namespace (IP address)
+- Storage volumes
+- Configuration
+
+4. Deployment:
+Describes the desired state for pods and manages their lifecycle. Handles:
+- Rolling updates
+- Rollbacks
+- Scaling
+- Self-healing
+
+5. Service:
+An abstraction that defines a logical set of pods and how to access them. Types:
+- ClusterIP: Internal cluster access only
+- NodePort: Exposes service on each node's IP
+- LoadBalancer: Exposes service externally using cloud provider's load balancer
+- ExternalName: Maps service to external DNS name
+
+6. Namespace:
+Virtual clusters within a physical cluster. Used to organize and isolate resources.
+
+7. ConfigMap and Secret:
+- ConfigMap: Store non-sensitive configuration data
+- Secret: Store sensitive data (passwords, tokens, keys)
+
+8. Volume:
+Storage that persists beyond pod lifecycle. Types include:
+- emptyDir: Temporary storage
+- hostPath: Mount from host node
+- persistentVolume: Cluster-wide storage resource
+- Cloud storage (AWS EBS, Azure Disk, GCP Persistent Disk)
+
+Key Features:
+
+1. Self-Healing:
+- Restarts failed containers
+- Replaces and reschedules containers when nodes die
+- Kills containers that don't respond to health checks
+
+2. Horizontal Scaling:
+- Scale applications up or down with a command
+- Auto-scaling based on CPU usage or custom metrics
+
+3. Load Balancing:
+- Distributes network traffic across pods
+- Provides stable IP addresses and DNS names
+
+4. Automated Rollouts and Rollbacks:
+- Gradually roll out changes to applications
+- Automatically roll back if something goes wrong
+
+5. Service Discovery:
+- Pods can find each other using DNS or environment variables
+- No need to modify application code
+
+Common kubectl Commands:
+- kubectl get pods: List all pods
+- kubectl get services: List all services
+- kubectl describe pod <name>: Show detailed pod information
+- kubectl logs <pod-name>: View pod logs
+- kubectl exec -it <pod-name> -- /bin/bash: Access pod shell
+- kubectl apply -f <file.yaml>: Create/update resources from file
+- kubectl delete pod <name>: Delete a pod
+- kubectl scale deployment <name> --replicas=3: Scale deployment
+
+Kubernetes vs Docker:
+- Docker: Container runtime (runs containers)
+- Kubernetes: Container orchestrator (manages containers at scale)
+- Docker Compose: Multi-container apps on single host
+- Kubernetes: Multi-container apps across multiple hosts
+- They work together: Kubernetes uses Docker (or other runtimes) to run containers
+
+Architecture:
+
+Control Plane Components:
+- API Server: Frontend for Kubernetes control plane
+- etcd: Key-value store for cluster data
+- Scheduler: Assigns pods to nodes
+- Controller Manager: Runs controller processes
+
+Node Components:
+- Kubelet: Ensures containers are running in pods
+- Kube-proxy: Maintains network rules
+- Container Runtime: Runs containers
+
+Best Practices:
+1. Use namespaces to organize resources
+2. Set resource limits (CPU, memory) for containers
+3. Use liveness and readiness probes
+4. Store configuration in ConfigMaps and Secrets
+5. Use labels and selectors for organization
+6. Implement proper logging and monitoring
+7. Use Helm for package management
+8. Follow the principle of least privilege
+9. Keep Kubernetes and applications updated
+10. Use declarative configuration (YAML files)
+
+When to Use Kubernetes:
+✓ Running microservices at scale
+✓ Need high availability and fault tolerance
+✓ Require automated scaling
+✓ Managing multiple containerized applications
+✓ Need consistent deployment across environments
+
+When NOT to Use Kubernetes:
+✗ Simple, single-container applications
+✗ Small teams without DevOps expertise
+✗ Applications that don't need scaling
+✗ When Docker Compose is sufficient

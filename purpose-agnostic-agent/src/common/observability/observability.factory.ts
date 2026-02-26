@@ -17,7 +17,10 @@ export class ObservabilityFactory {
     const seqUrl = this.configService.get<string>('SEQ_URL');
 
     if (seqUrl) {
-      return new SeqLogTransport(seqUrl, this.configService.get<string>('SEQ_API_KEY'));
+      return new SeqLogTransport(
+        seqUrl,
+        this.configService.get<string>('SEQ_API_KEY'),
+      );
     }
 
     // Add other providers here:
@@ -29,7 +32,8 @@ export class ObservabilityFactory {
   }
 
   createMetricsProvider(): MetricsProvider {
-    const prometheusEnabled = this.configService.get<boolean>('PROMETHEUS_ENABLED');
+    const prometheusEnabled =
+      this.configService.get<boolean>('PROMETHEUS_ENABLED');
 
     if (prometheusEnabled) {
       return new PrometheusMetricsProvider();

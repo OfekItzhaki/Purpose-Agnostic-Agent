@@ -44,7 +44,8 @@ export class HealthController {
   @HealthCheck()
   @ApiOperation({
     summary: 'Readiness check',
-    description: 'Checks if all dependencies (database, LLM providers) are available.',
+    description:
+      'Checks if all dependencies (database, LLM providers) are available.',
   })
   @ApiResponse({
     status: 200,

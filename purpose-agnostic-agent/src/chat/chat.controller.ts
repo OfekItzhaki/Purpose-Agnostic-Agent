@@ -1,4 +1,11 @@
-import { Controller, Post, Get, Body, ValidationPipe, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
@@ -75,7 +82,8 @@ export class ChatController {
   @Get('agents')
   @ApiOperation({
     summary: 'List all available agent personas',
-    description: 'Returns a list of all configured agent personas with their metadata.',
+    description:
+      'Returns a list of all configured agent personas with their metadata.',
   })
   @ApiResponse({
     status: 200,

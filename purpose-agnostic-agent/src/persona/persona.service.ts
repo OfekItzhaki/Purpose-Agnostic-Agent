@@ -31,17 +31,16 @@ export class PersonaService {
 
       this.personaCache.clear();
       for (const entity of entities) {
-        this.logger.log(
-          `Processing persona: ${entity.id}`,
-          'PersonaService',
-        );
+        this.logger.log(`Processing persona: ${entity.id}`, 'PersonaService');
         const persona: Persona = {
           id: entity.id,
           name: entity.name,
           description: entity.description,
           extraInstructions: entity.extra_instructions,
           knowledgeCategory: entity.knowledge_category,
-          temperature: entity.temperature ? Number(entity.temperature) : undefined,
+          temperature: entity.temperature
+            ? Number(entity.temperature)
+            : undefined,
           maxTokens: entity.max_tokens || undefined,
         };
         this.personaCache.set(entity.id, persona);

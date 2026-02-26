@@ -8,7 +8,10 @@ import {
   ProviderHealthStatus,
 } from './interfaces/llm-provider.interface.js';
 import { LLMProviderFactory } from './provider.factory.js';
-import { CircuitBreaker, CircuitBreakerConfig } from '../common/circuit-breaker.js';
+import {
+  CircuitBreaker,
+  CircuitBreakerConfig,
+} from '../common/circuit-breaker.js';
 import { StructuredLogger } from '../common/logger.service.js';
 import { FailoverEvent } from './entities/failover-event.entity.js';
 import { UsageTrackerService } from './usage-tracker.service.js';
@@ -42,7 +45,7 @@ export class ModelRouterService {
 
   async generate(request: GenerateRequest): Promise<GenerateResponse> {
     const canProceed = this.usageTracker.canMakeRequest('gemini-pro');
-    
+
     if (!canProceed.allowed) {
       this.logger.warn(
         `Gemini usage limit reached: ${canProceed.reason}`,
@@ -122,7 +125,9 @@ export class ModelRouterService {
     return healthStatuses;
   }
 
-  async getProviderStatus(): Promise<Array<{ name: string; tier: string; isHealthy: boolean }>> {
+  async getProviderStatus(): Promise<
+    Array<{ name: string; tier: string; isHealthy: boolean }>
+  > {
     const healthStatuses = await this.getProviderHealth();
     return healthStatuses.map((status) => ({
       name: status.name,

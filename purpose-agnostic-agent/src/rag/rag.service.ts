@@ -1,12 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import type { Queue } from 'bull';
 import type {
-  KnowledgeChunkRepository,
   SearchOptions,
   SearchResult,
 } from './interfaces/knowledge-chunk.repository.interface.js';
-import type { EmbeddingService } from './interfaces/embedding.service.interface.js';
+import { PostgresKnowledgeChunkRepository } from './repositories/postgres-knowledge-chunk.repository.js';
+import { EmbeddingRouterService } from './services/embedding-router.service.js';
 import { StructuredLogger } from '../common/logger.service.js';
 import { FileUploadValidator } from '../common/validators/file-upload.validator.js';
 
@@ -15,10 +15,8 @@ export class RAGService {
   private readonly logger = new StructuredLogger();
 
   constructor(
-    @Inject('KnowledgeChunkRepository')
-    private readonly chunkRepository: KnowledgeChunkRepository,
-    @Inject('EmbeddingService')
-    private readonly embeddingService: EmbeddingService,
+    private readonly chunkRepository: PostgresKnowledgeChunkRepository,
+    private readonly embeddingService: EmbeddingRouterService,
     @InjectQueue('document-ingestion')
     private readonly ingestionQueue: Queue,
   ) {}
@@ -27,10 +25,7 @@ export class RAGService {
     // Validate file path
     FileUploadValidator.validatePath(path);
 
-    this.logger.log(
-      `Queuing document ingestion: ${path}`,
-      'RAGService',
-    );
+    this.logger.log(`Queuing document ingestion: ${path}`, 'RAGService');
 
     const job = await this.ingestionQueue.add({
       filePath: path,
@@ -46,10 +41,7 @@ export class RAGService {
   ): Promise<SearchResult[]> {
     const startTime = Date.now();
 
-    this.logger.log(
-      `Searching knowledge base: ${query}`,
-      'RAGService',
-    );
+    this.logger.log(`Searching knowledge base: ${query}`, 'RAGService');
 
     // Generate query embedding
     const queryEmbedding = await this.embeddingService.generateEmbedding(query);

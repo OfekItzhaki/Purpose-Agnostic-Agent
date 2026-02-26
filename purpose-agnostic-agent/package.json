@@ -25,7 +25,13 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "docker:restart": "docker-compose restart"
+    "docker:restart": "docker-compose restart",
+    "migration:run": "ts-node --esm src/data-source.ts && typeorm migration:run -d src/data-source.ts",
+    "migration:revert": "ts-node --esm src/data-source.ts && typeorm migration:revert -d src/data-source.ts",
+    "migration:generate": "typeorm migration:generate -d src/data-source.ts",
+    "migration:create": "typeorm migration:create",
+    "migration:apply": "ts-node --esm scripts/run-migration.ts",
+    "migration:rollback": "ts-node --esm scripts/rollback-migration.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -46,6 +52,7 @@
     "@types/uuid": "^10.0.0",
     "@willsoto/nestjs-prometheus": "^6.0.2",
     "axios": "^1.13.5",
+    "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
@@ -73,8 +80,10 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.1.14",
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/multer": "^2.0.0",
     "@types/node": "^22.10.7",
     "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.16.0",

@@ -1,0 +1,43 @@
+Docker Basics
+
+What is Docker?
+Docker is a platform for developing, shipping, and running applications in containers. Containers package software with all its dependencies, ensuring it runs consistently across different environments.
+
+Key Concepts:
+
+1. Container:
+A lightweight, standalone executable package that includes everything needed to run software: code, runtime, system tools, libraries, and settings.
+
+2. Image:
+A read-only template used to create containers. Images are built from a Dockerfile and can be stored in registries like Docker Hub.
+
+3. Dockerfile:
+A text file containing instructions to build a Docker image. It specifies the base image, dependencies, and commands to run.
+
+4. Docker Compose:
+A tool for defining and running multi-container Docker applications using a YAML file.
+
+Common Docker Commands:
+- docker build: Build an image from a Dockerfile
+- docker run: Create and start a container
+- docker ps: List running containers
+- docker stop: Stop a running container
+- docker rm: Remove a container
+- docker images: List available images
+- docker pull: Download an image from a registry
+- docker push: Upload an image to a registry
+
+Benefits of Docker:
+1. Consistency: Same environment across development, testing, and production
+2. Isolation: Applications run in isolated containers
+3. Portability: Containers can run anywhere Docker is installed
+4. Efficiency: Containers share the host OS kernel, using fewer resources than VMs
+5. Scalability: Easy to scale applications horizontally
+6. Version Control: Images can be versioned and rolled back
+
+Docker vs Virtual Machines:
+- Containers share the host OS kernel (lightweight)
+- VMs include a full OS (heavyweight)
+- Containers start in seconds
+- VMs take minutes to boot
+- Containers use less disk space and memory

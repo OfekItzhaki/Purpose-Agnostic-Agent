@@ -1,6 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { StructuredLogger } from '../common/logger.service';
-import { MCPTool, MCPToolDefinition, MCPToolResult } from './interfaces/mcp-tool.interface';
+import {
+  MCPTool,
+  MCPToolDefinition,
+  MCPToolResult,
+} from './interfaces/mcp-tool.interface';
 
 interface MCPRequest {
   jsonrpc: '2.0';
@@ -61,12 +65,9 @@ export class MCPServerService implements OnModuleInit {
         method: request.method,
         error: error.message,
       });
-      return this.createErrorResponse(
-        request.id,
-        -32603,
-        'Internal error',
-        { message: error.message },
-      );
+      return this.createErrorResponse(request.id, -32603, 'Internal error', {
+        message: error.message,
+      });
     }
   }
 
@@ -88,9 +89,9 @@ export class MCPServerService implements OnModuleInit {
   }
 
   private handleListTools(request: MCPRequest): MCPResponse {
-    const toolDefinitions: MCPToolDefinition[] = Array.from(this.tools.values()).map(
-      (tool) => tool.getDefinition(),
-    );
+    const toolDefinitions: MCPToolDefinition[] = Array.from(
+      this.tools.values(),
+    ).map((tool) => tool.getDefinition());
 
     return {
       jsonrpc: '2.0',

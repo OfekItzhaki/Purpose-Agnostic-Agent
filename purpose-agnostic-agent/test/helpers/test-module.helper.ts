@@ -26,9 +26,11 @@ export async function createTestModule(
 /**
  * Creates a test application with validation pipe
  */
-export async function createTestApp(module: TestingModule): Promise<INestApplication> {
+export async function createTestApp(
+  module: TestingModule,
+): Promise<INestApplication> {
   const app = module.createNestApplication();
-  
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

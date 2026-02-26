@@ -25,7 +25,10 @@ export class ChatService {
     private readonly logger: StructuredLogger,
   ) {
     // Optional self-check feature (togglable via environment variable)
-    this.enableSelfCheck = this.configService.get<boolean>('RAG_SELF_CHECK_ENABLED', false);
+    this.enableSelfCheck = this.configService.get<boolean>(
+      'RAG_SELF_CHECK_ENABLED',
+      false,
+    );
   }
 
   async chat(request: ChatRequestDto): Promise<ChatResponseDto> {
@@ -34,7 +37,9 @@ export class ChatService {
     // Retrieve persona
     const persona = await this.personaService.getPersona(agent_id);
     if (!persona) {
-      throw new NotFoundException(`Persona with agent_id '${agent_id}' not found`);
+      throw new NotFoundException(
+        `Persona with agent_id '${agent_id}' not found`,
+      );
     }
 
     // Get or create session
@@ -64,10 +69,15 @@ export class ChatService {
       .join('\n\n');
 
     // Build RAG-only system prompt (shared + persona extra instructions)
-    const systemPrompt = this.ragSystemPrompt.buildSystemPrompt(persona.extraInstructions);
+    const systemPrompt = this.ragSystemPrompt.buildSystemPrompt(
+      persona.extraInstructions,
+    );
 
     // Build user message with context and question
-    const userMessage = this.ragSystemPrompt.buildUserMessage(context, question);
+    const userMessage = this.ragSystemPrompt.buildUserMessage(
+      context,
+      question,
+    );
 
     // Call Model Router with RAG-only prompt
     const llmResponse = await this.modelRouter.generate({
@@ -81,13 +91,22 @@ export class ChatService {
 
     // Optional self-check: Verify answer uses only context
     if (this.enableSelfCheck && context) {
-      const isValid = await this.performSelfCheck(finalAnswer, context, question);
+      const isValid = await this.performSelfCheck(
+        finalAnswer,
+        context,
+        question,
+      );
       if (!isValid) {
-        this.logger.logWithContext('warn', 'Self-check failed: Answer may not be based on context', {
-          agent_id,
-          session_id: session.id,
-        });
-        finalAnswer = "I don't have enough information in my knowledge base to answer that question.";
+        this.logger.logWithContext(
+          'warn',
+          'Self-check failed: Answer may not be based on context',
+          {
+            agent_id,
+            session_id: session.id,
+          },
+        );
+        finalAnswer =
+          "I don't have enough information in my knowledge base to answer that question.";
       }
     }
 
@@ -126,13 +145,17 @@ export class ChatService {
   /**
    * Optional self-check: Verify that the answer is based on the provided context.
    * This uses the LLM to validate its own answer.
-   * 
+   *
    * @param answer The generated answer
    * @param context The RAG context that was provided
    * @param question The original question
    * @returns true if answer is valid, false otherwise
    */
-  private async performSelfCheck(answer: string, context: string, question: string): Promise<boolean> {
+  private async performSelfCheck(
+    answer: string,
+    context: string,
+    question: string,
+  ): Promise<boolean> {
     const selfCheckPrompt = `You are a consistency validator. Your job is to determine if an answer is based ONLY on the provided context.
 
 CONTEXT:
@@ -150,7 +173,8 @@ Is this answer based ONLY on the information in the CONTEXT above? Respond with 
 
     try {
       const response = await this.modelRouter.generate({
-        systemPrompt: 'You are a consistency validator. Respond with only YES or NO.',
+        systemPrompt:
+          'You are a consistency validator. Respond with only YES or NO.',
         messages: [{ role: 'user', content: selfCheckPrompt }],
         temperature: 0.0, // Use deterministic response
         maxTokens: 10,

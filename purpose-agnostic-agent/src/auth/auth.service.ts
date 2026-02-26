@@ -21,8 +21,10 @@ export class AuthService {
   async validateApiKey(apiKey: string): Promise<AuthUser | null> {
     // In production, validate against database
     // For now, check against environment variable
-    const validApiKeys = (process.env.API_KEYS || '').split(',').filter(Boolean);
-    
+    const validApiKeys = (process.env.API_KEYS || '')
+      .split(',')
+      .filter(Boolean);
+
     if (!validApiKeys.includes(apiKey)) {
       return null;
     }

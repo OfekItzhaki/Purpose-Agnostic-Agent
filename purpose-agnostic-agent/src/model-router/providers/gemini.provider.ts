@@ -11,7 +11,7 @@ export class GeminiProvider implements LLMProvider {
 
   constructor(apiKey: string) {
     this.genAI = new GoogleGenerativeAI(apiKey);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   }
 
   getName(): string {
@@ -24,7 +24,8 @@ export class GeminiProvider implements LLMProvider {
 
   async generate(request: GenerateRequest): Promise<GenerateResponse> {
     try {
-      const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+      const userMessage =
+        request.messages.find((m) => m.role === 'user')?.content || '';
       const prompt = `${request.systemPrompt}\n\n${userMessage}`;
 
       // Enforce conservative limits to stay within free tier

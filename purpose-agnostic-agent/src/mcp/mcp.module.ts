@@ -10,7 +10,12 @@ import { StructuredLogger } from '../common/logger.service';
 @Module({
   imports: [forwardRef(() => ChatModule), forwardRef(() => RAGModule)],
   controllers: [MCPController],
-  providers: [MCPServerService, AskAgentTool, SearchKnowledgeTool, StructuredLogger],
+  providers: [
+    MCPServerService,
+    AskAgentTool,
+    SearchKnowledgeTool,
+    StructuredLogger,
+  ],
   exports: [MCPServerService],
 })
 export class MCPModule implements OnModuleInit {

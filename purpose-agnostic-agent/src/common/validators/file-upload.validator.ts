@@ -68,13 +68,17 @@ export class FileUploadValidator {
   static validatePath(filePath: string): void {
     // Prevent path traversal attacks
     if (filePath.includes('..')) {
-      throw new BadRequestException('Invalid file path: path traversal detected');
+      throw new BadRequestException(
+        'Invalid file path: path traversal detected',
+      );
     }
 
     // Ensure path is within allowed directory
     const normalizedPath = path.normalize(filePath);
     if (normalizedPath.startsWith('/') || normalizedPath.includes('\\')) {
-      throw new BadRequestException('Invalid file path: absolute paths not allowed');
+      throw new BadRequestException(
+        'Invalid file path: absolute paths not allowed',
+      );
     }
   }
 

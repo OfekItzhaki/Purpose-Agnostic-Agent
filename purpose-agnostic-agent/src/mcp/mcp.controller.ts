@@ -53,7 +53,8 @@ export class MCPController {
   @Get('tools')
   @ApiOperation({
     summary: 'List available MCP tools',
-    description: 'Returns a list of all registered MCP tools with their schemas.',
+    description:
+      'Returns a list of all registered MCP tools with their schemas.',
   })
   @ApiResponse({
     status: 200,

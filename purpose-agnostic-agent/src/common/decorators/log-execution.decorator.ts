@@ -18,7 +18,7 @@ export function LogExecution(
   const originalMethod = descriptor.value;
 
   descriptor.value = async function (...args: any[]) {
-    const logger = (this as any).logger || console;
+    const logger = this.logger || console;
     const startTime = Date.now();
 
     logger.log({

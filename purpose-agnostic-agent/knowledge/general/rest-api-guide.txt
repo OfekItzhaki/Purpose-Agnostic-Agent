@@ -1,0 +1,35 @@
+REST API Guide
+
+What is a REST API?
+A REST (Representational State Transfer) API is an architectural style for designing networked applications. It uses HTTP requests to access and manipulate data.
+
+Key Principles of REST:
+1. Client-Server Architecture: The client and server are separate, allowing them to evolve independently.
+2. Stateless: Each request from client to server must contain all information needed to understand the request.
+3. Cacheable: Responses must define themselves as cacheable or non-cacheable.
+4. Uniform Interface: Resources are identified in requests using URIs.
+5. Layered System: Client cannot tell whether it's connected directly to the end server.
+
+HTTP Methods in REST:
+- GET: Retrieve data from the server
+- POST: Create new resources
+- PUT: Update existing resources
+- DELETE: Remove resources
+- PATCH: Partially update resources
+
+Common Status Codes:
+- 200 OK: Request succeeded
+- 201 Created: Resource created successfully
+- 400 Bad Request: Invalid request
+- 401 Unauthorized: Authentication required
+- 404 Not Found: Resource doesn't exist
+- 500 Internal Server Error: Server error
+
+Best Practices:
+1. Use nouns for resource names (e.g., /users, /products)
+2. Use HTTP methods to define actions
+3. Version your API (e.g., /api/v1/users)
+4. Use proper status codes
+5. Implement pagination for large datasets
+6. Provide clear error messages
+7. Use HTTPS for security

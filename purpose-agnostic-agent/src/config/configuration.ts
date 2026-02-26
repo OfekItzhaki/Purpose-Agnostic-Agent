@@ -47,6 +47,7 @@ export default () => ({
   openRouterApiKey: process.env.OPENROUTER_API_KEY,
   ollamaUrl: process.env.OLLAMA_URL || 'http://localhost:11434',
   logLevel: process.env.LOG_LEVEL || 'info',
-  personaConfigPath: process.env.PERSONA_CONFIG_PATH || './config/personas.json',
+  personaConfigPath:
+    process.env.PERSONA_CONFIG_PATH || './config/personas.json',
   storageType: (process.env.STORAGE_TYPE || 'database') as 'database' | 'file',
 });

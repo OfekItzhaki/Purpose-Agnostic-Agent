@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, MaxLength, IsOptional, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  MaxLength,
+  IsOptional,
+  IsNumber,
+  Min,
+  Max,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -35,7 +43,8 @@ export class CreatePersonaDto {
   description!: string;
 
   @ApiProperty({
-    description: 'Optional style/tone instructions for the persona (cannot override RAG-only rules)',
+    description:
+      'Optional style/tone instructions for the persona (cannot override RAG-only rules)',
     example: 'Be concise and technical. Use bullet points when appropriate.',
     maxLength: 2000,
     required: false,

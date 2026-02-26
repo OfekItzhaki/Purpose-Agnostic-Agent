@@ -3,7 +3,7 @@ import { pbtConfig } from '../pbt.config';
 
 /**
  * Property-Based Tests for Chat Flow
- * 
+ *
  * These tests validate:
  * - Property 12: Knowledge Category Filter Propagation
  * - Property 13: Session Continuity
@@ -14,7 +14,13 @@ describe('Chat Flow Properties', () => {
     it('should propagate persona knowledge category to RAG search', () => {
       fc.assert(
         fc.property(
-          fc.constantFrom('general', 'technical', 'creative', 'support', 'legal'),
+          fc.constantFrom(
+            'general',
+            'technical',
+            'creative',
+            'support',
+            'legal',
+          ),
           fc.string({ minLength: 10, maxLength: 200 }), // question
           (knowledgeCategory, question) => {
             // Simulate persona
@@ -35,7 +41,7 @@ describe('Chat Flow Properties', () => {
             expect(ragSearchOptions.category).toBe(knowledgeCategory);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -46,30 +52,35 @@ describe('Chat Flow Properties', () => {
           fc.array(
             fc.record({
               content: fc.string({ minLength: 10, maxLength: 200 }),
-              category: fc.constantFrom('general', 'technical', 'creative', 'support'),
+              category: fc.constantFrom(
+                'general',
+                'technical',
+                'creative',
+                'support',
+              ),
               score: fc.float({ min: 0, max: 1 }),
             }),
-            { minLength: 5, maxLength: 20 }
+            { minLength: 5, maxLength: 20 },
           ),
           (targetCategory, allResults) => {
             // Filter results by category
             const filteredResults = allResults.filter(
-              result => result.category === targetCategory
+              (result) => result.category === targetCategory,
             );
 
             // Verify all filtered results match target category
-            filteredResults.forEach(result => {
+            filteredResults.forEach((result) => {
               expect(result.category).toBe(targetCategory);
             });
 
             // Verify no results from other categories
             const otherCategoryResults = filteredResults.filter(
-              result => result.category !== targetCategory
+              (result) => result.category !== targetCategory,
             );
             expect(otherCategoryResults.length).toBe(0);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -77,7 +88,10 @@ describe('Chat Flow Properties', () => {
       fc.assert(
         fc.property(
           fc.constantFrom('general', 'technical', 'creative'),
-          fc.array(fc.string({ minLength: 10, maxLength: 200 }), { minLength: 2, maxLength: 5 }),
+          fc.array(fc.string({ minLength: 10, maxLength: 200 }), {
+            minLength: 2,
+            maxLength: 5,
+          }),
           (knowledgeCategory, questions) => {
             // Simulate persona
             const persona = {
@@ -93,12 +107,12 @@ describe('Chat Flow Properties', () => {
             }));
 
             // Verify category is consistent across all queries
-            searchOptions.forEach(options => {
+            searchOptions.forEach((options) => {
               expect(options.category).toBe(knowledgeCategory);
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -124,7 +138,7 @@ describe('Chat Flow Properties', () => {
             expect(ragSearchOptions.category).toBeUndefined();
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });
@@ -134,12 +148,16 @@ describe('Chat Flow Properties', () => {
       fc.assert(
         fc.property(
           fc.uuid(),
-          fc.array(fc.string({ minLength: 10, maxLength: 200 }), { minLength: 2, maxLength: 10 }),
+          fc.array(fc.string({ minLength: 10, maxLength: 200 }), {
+            minLength: 2,
+            maxLength: 10,
+          }),
           (sessionId, messages) => {
             // Simulate conversation
-            const conversation: Array<{ sessionId: string; message: string }> = [];
+            const conversation: Array<{ sessionId: string; message: string }> =
+              [];
 
-            messages.forEach(message => {
+            messages.forEach((message) => {
               conversation.push({
                 sessionId,
                 message,
@@ -147,12 +165,12 @@ describe('Chat Flow Properties', () => {
             });
 
             // Verify all messages have same session ID
-            conversation.forEach(entry => {
+            conversation.forEach((entry) => {
               expect(entry.sessionId).toBe(sessionId);
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -166,21 +184,23 @@ describe('Chat Flow Properties', () => {
               content: fc.string({ minLength: 10, maxLength: 200 }),
               timestamp: fc.integer({ min: 1000000000, max: 2000000000 }),
             }),
-            { minLength: 2, maxLength: 10 }
+            { minLength: 2, maxLength: 10 },
           ),
           (sessionId, messages) => {
             // Sort messages by timestamp
-            const sortedMessages = [...messages].sort((a, b) => a.timestamp - b.timestamp);
+            const sortedMessages = [...messages].sort(
+              (a, b) => a.timestamp - b.timestamp,
+            );
 
             // Verify chronological order
             for (let i = 1; i < sortedMessages.length; i++) {
               expect(sortedMessages[i].timestamp).toBeGreaterThanOrEqual(
-                sortedMessages[i - 1].timestamp
+                sortedMessages[i - 1].timestamp,
               );
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -188,12 +208,18 @@ describe('Chat Flow Properties', () => {
       fc.assert(
         fc.property(
           fc.uuid(),
-          fc.array(fc.string({ minLength: 10, maxLength: 200 }), { minLength: 2, maxLength: 10 }),
+          fc.array(fc.string({ minLength: 10, maxLength: 200 }), {
+            minLength: 2,
+            maxLength: 10,
+          }),
           (sessionId, userMessages) => {
             // Simulate conversation with alternating roles
-            const conversation: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+            const conversation: Array<{
+              role: 'user' | 'assistant';
+              content: string;
+            }> = [];
 
-            userMessages.forEach(message => {
+            userMessages.forEach((message) => {
               // User message
               conversation.push({
                 role: 'user',
@@ -217,7 +243,7 @@ describe('Chat Flow Properties', () => {
             }
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -241,7 +267,7 @@ describe('Chat Flow Properties', () => {
             expect(newSessionId.length).toBeGreaterThan(0);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -249,22 +275,25 @@ describe('Chat Flow Properties', () => {
       fc.assert(
         fc.property(
           fc.uuid(),
-          fc.array(fc.string({ minLength: 10, maxLength: 200 }), { minLength: 2, maxLength: 5 }),
+          fc.array(fc.string({ minLength: 10, maxLength: 200 }), {
+            minLength: 2,
+            maxLength: 5,
+          }),
           (existingSessionId, questions) => {
             // Simulate multiple requests with same sessionId
-            const requests = questions.map(question => ({
+            const requests = questions.map((question) => ({
               agent_id: 'test-agent',
               question,
               sessionId: existingSessionId,
             }));
 
             // Verify all requests use same session
-            requests.forEach(request => {
+            requests.forEach((request) => {
               expect(request.sessionId).toBe(existingSessionId);
             });
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
 
@@ -291,7 +320,7 @@ describe('Chat Flow Properties', () => {
             expect(message.tokensUsed).toBeGreaterThan(0);
           },
         ),
-        pbtConfig.standard,
+        pbtConfig,
       );
     });
   });

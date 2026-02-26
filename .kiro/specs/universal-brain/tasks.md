@@ -140,7 +140,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 4: Failover Event Logging**
     - **Validates: Requirements 1.6**
 
-  - [ ]* 3.7 Write unit tests for Model Router
+  - [x]* 3.7 Write unit tests for Model Router
     - Test successful request with primary provider
     - Test failover on primary timeout
     - Test failover on HTTP 5xx error
@@ -215,7 +215,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 28: Job Failure Logging and Retry**
     - **Validates: Requirements 13.7**
 
-  - [ ]* 4.7 Write unit tests for RAG components
+  - [x]* 4.7 Write unit tests for RAG components
     - Test PDF text extraction with sample documents
     - Test chunking with various text sizes
     - Test embedding generation with mock API
@@ -287,7 +287,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 40: Persona Validation Error Response**
     - **Validates: Requirements 19.11**
 
-  - [ ]* 5.7 Write unit tests for persona module
+  - [x]* 5.7 Write unit tests for persona module
     - Test persona loading from JSON file
     - Test persona validation with missing fields
     - Test persona creation and persistence
@@ -295,7 +295,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Test persona deletion
     - Test invalid agent ID handling
 
-- [ ] 6. Chat Module with REST API
+- [x] 6. Chat Module with REST API
   - [x] 6.1 Create chat DTOs with validation
     - Create ChatRequestDto with agent_id, question, sessionId fields
     - Add validation: IsString, IsNotEmpty, MaxLength, IsUUID
@@ -355,7 +355,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 18: Agent List Response Format**
     - **Validates: Requirements 6.2, 6.3**
 
-  - [ ]* 6.7 Write integration tests for chat API
+  - [x]* 6.7 Write integration tests for chat API
     - Test POST /api/chat with valid request returns 200 with answer and citations
     - Test POST /api/chat with invalid agent_id returns 404
     - Test POST /api/chat with missing required fields returns 400
@@ -389,13 +389,13 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 14: MCP Response Structure**
     - **Validates: Requirements 4.5**
 
-  - [ ]* 7.5 Write unit tests for MCP server
+  - [x]* 7.5 Write unit tests for MCP server
     - Test ask_agent tool with valid inputs
     - Test search_knowledge tool with category filter
     - Test error handling for invalid inputs
     - Test MCP protocol serialization
 
-- [ ] 8. Health monitoring and observability
+- [x] 8. Health monitoring and observability
   - [x] 8.1 Implement health check endpoints
     - Create HealthController with GET /health endpoint
     - Return basic health status with timestamp and version
@@ -406,7 +406,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Return 503 when dependencies unavailable with details
     - _Requirements: 14.3, 14.4, 14.5_
 
-  - [ ]* 8.2 Write unit tests for health checks
+  - [x]* 8.2 Write unit tests for health checks
     - Test /health returns 200 with status
     - Test /health/ready returns 200 when all dependencies healthy
     - Test /health/ready returns 503 when database unavailable
@@ -429,7 +429,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Document all error responses with status codes
     - _Requirements: 16.3, 16.4, 16.5, 16.6_
 
-- [ ] 10. Testing infrastructure and property-based tests
+- [x] 10. Testing infrastructure and property-based tests
   - [x] 10.1 Set up testing infrastructure
     - Configure Jest with TypeScript support
     - Set up test database using testcontainers
@@ -447,7 +447,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Set 30 second timeout per property test
     - _Requirements: 17.1, 17.2, 17.3, 17.6, 17.7_
 
-  - [ ]* 10.3 Write remaining property-based tests
+  - [x]* 10.3 Write remaining property-based tests
     - **Property 23: RFC 7807 Error Response Format**
     - **Validates: Requirements 11.2, 11.3**
     - **Property 24: Error Logging Before Response**
@@ -465,7 +465,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - **Property 34: OpenAPI Documentation Completeness**
     - **Validates: Requirements 16.3, 16.4**
 
-- [ ] 11. Integration and final wiring
+- [x] 11. Integration and final wiring
   - [x] 11.1 Wire all modules in AppModule
     - Import ConfigModule as global
     - Import and configure all feature modules: ModelRouterModule, RAGModule, PersonaModule, MCPModule, ChatModule, JobsModule, HealthModule
@@ -508,7 +508,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Document troubleshooting common issues
     - _Requirements: 7.1, 7.2_
 
-  - [ ]* 11.5 Write end-to-end integration tests
+  - [x]* 11.5 Write end-to-end integration tests
     - Test complete chat flow: persona → RAG → LLM → response
     - Test document ingestion flow: upload → parse → embed → store
     - Test failover flow: primary fails → fallback succeeds

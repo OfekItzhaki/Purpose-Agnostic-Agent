@@ -37,7 +37,7 @@ describe('AuthService', () => {
     it('should return user for valid API key', async () => {
       process.env.API_KEYS = 'valid-key-1,valid-key-2';
       const result = await service.validateApiKey('valid-key-1');
-      
+
       expect(result).toEqual({
         id: 'api-key-user',
         email: 'api@service.local',
@@ -86,14 +86,14 @@ describe('AuthService', () => {
   describe('generateApiKey', () => {
     it('should generate API key with pak_ prefix', () => {
       const apiKey = service.generateApiKey();
-      
+
       expect(apiKey).toMatch(/^pak_[a-f0-9]{64}$/);
     });
 
     it('should generate unique API keys', () => {
       const key1 = service.generateApiKey();
       const key2 = service.generateApiKey();
-      
+
       expect(key1).not.toBe(key2);
     });
   });

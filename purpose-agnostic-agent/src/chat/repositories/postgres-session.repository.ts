@@ -8,7 +8,10 @@ import { ChatSession, ChatMessage } from '../entities/chat-session.entity';
 export class PostgresSessionRepository implements SessionRepository {
   constructor(private readonly pool: Pool) {}
 
-  async create(agentId: string, metadata?: Record<string, any>): Promise<ChatSession> {
+  async create(
+    agentId: string,
+    metadata?: Record<string, any>,
+  ): Promise<ChatSession> {
     const id = uuidv4();
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours from now
@@ -115,7 +118,10 @@ export class PostgresSessionRepository implements SessionRepository {
     };
   }
 
-  async getMessages(sessionId: string, limit: number = 50): Promise<ChatMessage[]> {
+  async getMessages(
+    sessionId: string,
+    limit: number = 50,
+  ): Promise<ChatMessage[]> {
     const query = `
       SELECT * FROM chat_messages
       WHERE session_id = $1
@@ -136,13 +142,20 @@ export class PostgresSessionRepository implements SessionRepository {
     }));
   }
 
-  async update(sessionId: string, metadata: Record<string, any>): Promise<void> {
+  async update(
+    sessionId: string,
+    metadata: Record<string, any>,
+  ): Promise<void> {
     const query = `
       UPDATE chat_sessions
       SET metadata = $1, updated_at = $2
       WHERE id = $3
     `;
 
-    await this.pool.query(query, [JSON.stringify(metadata), new Date(), sessionId]);
+    await this.pool.query(query, [
+      JSON.stringify(metadata),
+      new Date(),
+      sessionId,
+    ]);
   }
 }

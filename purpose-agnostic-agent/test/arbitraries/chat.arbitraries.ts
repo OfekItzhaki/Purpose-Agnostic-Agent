@@ -64,11 +64,13 @@ export const chatResponseDtoArbitrary = (): fc.Arbitrary<{
 /**
  * Generate invalid ChatRequestDto objects
  */
-export const invalidChatRequestDtoArbitrary = (): fc.Arbitrary<Partial<{
-  agent_id: string;
-  question: string;
-  sessionId: string;
-}>> =>
+export const invalidChatRequestDtoArbitrary = (): fc.Arbitrary<
+  Partial<{
+    agent_id: string;
+    question: string;
+    sessionId: string;
+  }>
+> =>
   fc.oneof(
     // Missing agent_id
     fc.record({

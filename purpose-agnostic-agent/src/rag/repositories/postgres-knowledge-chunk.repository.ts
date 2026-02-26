@@ -10,9 +10,7 @@ import {
 import { KnowledgeChunk } from '../entities/knowledge-chunk.entity.js';
 
 @Injectable()
-export class PostgresKnowledgeChunkRepository
-  implements KnowledgeChunkRepository
-{
+export class PostgresKnowledgeChunkRepository implements KnowledgeChunkRepository {
   constructor(
     @InjectRepository(KnowledgeChunk)
     private readonly chunkRepository: Repository<KnowledgeChunk>,
@@ -69,7 +67,11 @@ export class PostgresKnowledgeChunkRepository
 
     let query = this.chunkRepository
       .createQueryBuilder('chunk')
-      .leftJoin('knowledge_documents', 'document', 'document.id = chunk.document_id')
+      .leftJoin(
+        'knowledge_documents',
+        'document',
+        'document.id = chunk.document_id',
+      )
       .select([
         'chunk.id',
         'chunk.content',
@@ -82,9 +84,12 @@ export class PostgresKnowledgeChunkRepository
         `1 - (chunk.embedding <=> '[${embedding.join(',')}]')`,
         'score',
       )
-      .where(`1 - (chunk.embedding <=> '[${embedding.join(',')}]') >= :minScore`, {
-        minScore,
-      });
+      .where(
+        `1 - (chunk.embedding <=> '[${embedding.join(',')}]') >= :minScore`,
+        {
+          minScore,
+        },
+      );
 
     if (options.category) {
       query = query.andWhere('document.category = :category', {

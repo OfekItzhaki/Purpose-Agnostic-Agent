@@ -27,7 +27,12 @@ export const knowledgeDocumentArbitrary = (): fc.Arbitrary<{
     id: uuidArbitrary(),
     sourcePath: filePathArbitrary(),
     category: knowledgeCategoryArbitrary(),
-    fileHash: fc.hexaString({ minLength: 64, maxLength: 64 }),
+    fileHash: fc
+      .array(fc.constantFrom(...'0123456789abcdef'), {
+        minLength: 64,
+        maxLength: 64,
+      })
+      .map((arr) => arr.join('')),
     metadata: fc.dictionary(fc.string(), fc.anything()),
     createdAt: fc.date(),
   });
@@ -92,9 +97,9 @@ export const searchQueryArbitrary = (): fc.Arbitrary<{
  * Generate valid PDF text content
  */
 export const pdfTextArbitrary = (): fc.Arbitrary<string> =>
-  fc.array(fc.lorem({ maxCount: 50 }), { minLength: 5, maxLength: 100 }).map((paragraphs) =>
-    paragraphs.join('\n\n'),
-  );
+  fc
+    .array(fc.lorem({ maxCount: 50 }), { minLength: 5, maxLength: 100 })
+    .map((paragraphs) => paragraphs.join('\n\n'));
 
 /**
  * Generate valid text chunks

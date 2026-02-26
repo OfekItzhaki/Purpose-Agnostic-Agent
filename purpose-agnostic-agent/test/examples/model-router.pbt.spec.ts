@@ -1,6 +1,6 @@
 /**
  * Example Property-Based Tests for Model Router Module
- * 
+ *
  * Demonstrates property-based testing for LLM failover logic.
  */
 
@@ -16,7 +16,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
   /**
    * Property 1: Primary Provider Failover
    * Validates: Requirements 1.2
-   * 
+   *
    * When primary provider fails, system should attempt fallback provider.
    */
   describe('Property 1: Primary Provider Failover', () => {
@@ -35,9 +35,11 @@ describe('Model Router Property-Based Tests (Examples)', () => {
             // 5. Assert that response includes fallback provider name
 
             // Property: Failover should occur for these failure types
-            const shouldFailover = ['timeout', 'http_5xx', 'connection_error'].includes(
-              failureReason,
-            );
+            const shouldFailover = [
+              'timeout',
+              'http_5xx',
+              'connection_error',
+            ].includes(failureReason);
 
             return shouldFailover;
           },
@@ -49,7 +51,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
   /**
    * Property 4: Failover Event Logging
    * Validates: Requirements 1.6
-   * 
+   *
    * Every failover should be logged with complete metadata.
    */
   describe('Property 4: Failover Event Logging', () => {
@@ -65,9 +67,10 @@ describe('Model Router Property-Based Tests (Examples)', () => {
             event.requestId;
 
           // Property: Failed and successful providers should be different
-          const providersDifferent = event.failedProvider !== event.successfulProvider;
+          const providersDifferent =
+            event.failedProvider !== event.successfulProvider;
 
-          return hasRequiredFields && providersDifferent;
+          return !!(hasRequiredFields && providersDifferent);
         }),
       );
     });
@@ -76,7 +79,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
   /**
    * Property 41: Circuit Breaker Opens on Repeated Failures
    * Validates: Requirements 21.10
-   * 
+   *
    * Circuit breaker should open after threshold failures.
    */
   describe('Property 41: Circuit Breaker Opens on Repeated Failures', () => {
@@ -94,7 +97,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
             // 2. Trigger 'failures' number of failures
             // 3. Assert state is OPEN if failures >= threshold
 
-            return shouldBeOpen === (failures >= threshold);
+            return shouldBeOpen === failures >= threshold;
           },
         ),
       );
@@ -104,7 +107,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
   /**
    * Property 42: Circuit Breaker Recovery Testing
    * Validates: Requirements 21.11
-   * 
+   *
    * Circuit breaker should attempt recovery after timeout.
    */
   describe('Property 42: Circuit Breaker Recovery Testing', () => {
@@ -132,7 +135,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
 
   /**
    * Example: Request Validation
-   * 
+   *
    * Demonstrates testing input validation.
    */
   describe('Request Validation Property', () => {
@@ -142,8 +145,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
           // Property: All generated requests should have required fields
           // Note: In RAG-only architecture, systemPrompt is managed by RAGSystemPromptService
           const hasRequiredFields =
-            request.userMessage &&
-            request.userMessage.length >= 1;
+            request.userMessage && request.userMessage.length >= 1;
 
           // Property: Optional temperature should be in valid range
           const temperatureValid =
@@ -153,7 +155,7 @@ describe('Model Router Property-Based Tests (Examples)', () => {
           // Property: Optional maxTokens should be positive
           const maxTokensValid = !request.maxTokens || request.maxTokens >= 100;
 
-          return hasRequiredFields && temperatureValid && maxTokensValid;
+          return !!(hasRequiredFields && temperatureValid && maxTokensValid);
         }),
       );
     });

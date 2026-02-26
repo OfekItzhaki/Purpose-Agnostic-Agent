@@ -6,9 +6,17 @@ export interface LogTransport {
 }
 
 export interface MetricsProvider {
-  recordMetric(name: string, value: number, labels?: Record<string, string>): void;
+  recordMetric(
+    name: string,
+    value: number,
+    labels?: Record<string, string>,
+  ): void;
   incrementCounter(name: string, labels?: Record<string, string>): void;
-  recordHistogram(name: string, value: number, labels?: Record<string, string>): void;
+  recordHistogram(
+    name: string,
+    value: number,
+    labels?: Record<string, string>,
+  ): void;
 }
 
 export interface TracingProvider {

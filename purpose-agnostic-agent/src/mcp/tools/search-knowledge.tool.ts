@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RAGService } from '../../rag/rag.service';
-import { MCPTool, MCPToolDefinition, MCPToolResult } from '../interfaces/mcp-tool.interface';
+import {
+  MCPTool,
+  MCPToolDefinition,
+  MCPToolResult,
+} from '../interfaces/mcp-tool.interface';
 import { StructuredLogger } from '../../common/logger.service';
 
 @Injectable()

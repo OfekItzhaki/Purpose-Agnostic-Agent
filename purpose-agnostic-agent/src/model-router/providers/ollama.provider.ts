@@ -14,8 +14,7 @@ export class OllamaProvider implements LLMProvider {
 
   constructor(private readonly configService: ConfigService) {
     this.ollamaUrl =
-      this.configService.get<string>('OLLAMA_URL') ||
-      'http://localhost:11434';
+      this.configService.get<string>('OLLAMA_URL') || 'http://localhost:11434';
     this.httpClient = axios.create({
       baseURL: this.ollamaUrl,
       timeout: 60000, // 60 second timeout for local inference

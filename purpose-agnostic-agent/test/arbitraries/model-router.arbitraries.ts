@@ -25,8 +25,12 @@ export const generateRequestArbitrary = (): fc.Arbitrary<{
     context: fc.option(fc.string({ minLength: 0, maxLength: 2000 }), {
       nil: undefined,
     }),
-    temperature: fc.option(fc.double({ min: 0.0, max: 2.0 }), { nil: undefined }),
-    maxTokens: fc.option(fc.integer({ min: 100, max: 4096 }), { nil: undefined }),
+    temperature: fc.option(fc.double({ min: 0.0, max: 2.0 }), {
+      nil: undefined,
+    }),
+    maxTokens: fc.option(fc.integer({ min: 100, max: 4096 }), {
+      nil: undefined,
+    }),
   });
 
 /**
@@ -40,7 +44,9 @@ export const generateResponseArbitrary = (): fc.Arbitrary<{
   fc.record({
     text: fc.string({ minLength: 10, maxLength: 2000 }),
     provider: providerNameArbitrary(),
-    tokensUsed: fc.option(fc.integer({ min: 10, max: 4096 }), { nil: undefined }),
+    tokensUsed: fc.option(fc.integer({ min: 10, max: 4096 }), {
+      nil: undefined,
+    }),
   });
 
 /**
@@ -87,7 +93,7 @@ export const failoverEventArbitrary = (): fc.Arbitrary<{
       ),
       requestId: fc.uuid(),
     })
-    .filter(event => event.failedProvider !== event.successfulProvider);
+    .filter((event) => event.failedProvider !== event.successfulProvider);
 
 /**
  * Generate LLM provider error objects
@@ -115,7 +121,11 @@ export const circuitBreakerStateArbitrary = (): fc.Arbitrary<{
   nextRetryTime?: Date;
 }> =>
   fc.record({
-    state: fc.constantFrom('CLOSED' as const, 'OPEN' as const, 'HALF_OPEN' as const),
+    state: fc.constantFrom(
+      'CLOSED' as const,
+      'OPEN' as const,
+      'HALF_OPEN' as const,
+    ),
     failureCount: fc.integer({ min: 0, max: 10 }),
     lastFailureTime: fc.option(fc.date(), { nil: undefined }),
     nextRetryTime: fc.option(fc.date(), { nil: undefined }),
