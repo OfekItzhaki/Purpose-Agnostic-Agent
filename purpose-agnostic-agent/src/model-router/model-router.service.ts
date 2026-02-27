@@ -55,6 +55,7 @@ export class ModelRouterService {
     }
 
     const providers = this.getProvidersInOrder();
+    const unavailableProviders: string[] = [];
 
     let lastError: Error | null = null;
 
@@ -85,6 +86,11 @@ export class ModelRouterService {
         lastError = error as Error;
         const reason = this.getFailureReason(error);
 
+        // Track if provider is unavailable due to missing/invalid API key
+        if (reason.includes('API key')) {
+          unavailableProviders.push(provider.getName());
+        }
+
         this.logger.error(
           `Provider ${provider.getName()} failed: ${reason}`,
           (error as Error).stack,
@@ -103,10 +109,13 @@ export class ModelRouterService {
       }
     }
 
-    // All providers failed
-    throw new Error(
-      `All LLM providers failed. Last error: ${lastError?.message}`,
-    );
+    // All providers failed - provide detailed error message
+    let errorMessage = `All LLM providers failed. Last error: ${lastError?.message}`;
+    if (unavailableProviders.length > 0) {
+      errorMessage += ` | Providers unavailable due to missing/invalid API keys: ${unavailableProviders.join(', ')}`;
+    }
+    
+    throw new Error(errorMessage);
   }
 
   async getProviderHealth(): Promise<ProviderHealthStatus[]> {

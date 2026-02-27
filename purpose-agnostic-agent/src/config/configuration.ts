@@ -7,8 +7,8 @@ export const configurationSchema = Joi.object({
   PORT: Joi.number().default(3000),
   DATABASE_URL: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
-  GOOGLE_AI_API_KEY: Joi.string().required(),
-  OPENAI_API_KEY: Joi.string().required(),
+  GOOGLE_AI_API_KEY: Joi.string().optional(),
+  OPENAI_API_KEY: Joi.string().optional(),
   OPENROUTER_API_KEY: Joi.string().optional(),
   OLLAMA_URL: Joi.string().default('http://localhost:11434'),
   LOG_LEVEL: Joi.string()
@@ -28,8 +28,8 @@ export interface AppConfig {
   port: number;
   databaseUrl: string;
   redisUrl: string;
-  googleAiApiKey: string;
-  openaiApiKey: string;
+  googleAiApiKey?: string;
+  openaiApiKey?: string;
   openRouterApiKey?: string;
   ollamaUrl: string;
   logLevel: string;

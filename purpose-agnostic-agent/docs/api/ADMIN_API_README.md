@@ -19,11 +19,57 @@ This document provides comprehensive documentation for the Admin API, which enab
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Authentication](#authentication)
-3. [API Endpoints](#api-endpoints)
-4. [Setup Instructions](#setup-instructions)
-5. [Error Handling](#error-handling)
-6. [Best Practices](#best-practices)
+2. [Quick Reference](#quick-reference)
+3. [Authentication](#authentication)
+4. [API Endpoints](#api-endpoints)
+5. [Setup Instructions](#setup-instructions)
+6. [Error Handling](#error-handling)
+7. [Best Practices](#best-practices)
+
+---
+
+## Quick Reference
+
+### All Available Endpoints
+
+| Category | Method | Endpoint | Description |
+|----------|--------|----------|-------------|
+| **Authentication** | POST | `/admin/auth/login` | Obtain JWT token |
+| **Personas** | GET | `/admin/personas` | List all personas |
+| **Personas** | GET | `/admin/personas/:id` | Get persona details |
+| **Personas** | POST | `/admin/personas` | Create new persona |
+| **Personas** | PUT | `/admin/personas/:id` | Update persona |
+| **Personas** | DELETE | `/admin/personas/:id` | Delete persona |
+| **Personas** | POST | `/admin/personas/:id/test` | Test persona with query |
+| **Knowledge** | GET | `/admin/knowledge/documents` | List all documents |
+| **Knowledge** | GET | `/admin/knowledge/documents/:id` | Get document details |
+| **Knowledge** | GET | `/admin/knowledge/statistics` | Get knowledge statistics |
+| **Knowledge** | POST | `/admin/knowledge/documents/upload` | Upload single document |
+| **Knowledge** | POST | `/admin/knowledge/documents/bulk-upload` | Upload multiple documents |
+| **Knowledge** | DELETE | `/admin/knowledge/documents/:id` | Delete document |
+| **Knowledge** | POST | `/admin/knowledge/documents/bulk-delete` | Delete multiple documents |
+| **Knowledge** | PUT | `/admin/knowledge/documents/bulk-reassign` | Reassign document categories |
+| **Categories** | GET | `/admin/categories` | List all categories |
+| **Categories** | POST | `/admin/categories` | Create new category |
+| **Categories** | DELETE | `/admin/categories/:id` | Delete category |
+| **Monitoring** | GET | `/admin/monitoring/ingestion/status` | Get ingestion queue status |
+| **Monitoring** | GET | `/admin/monitoring/ingestion/statistics` | Get processing statistics |
+| **Monitoring** | GET | `/admin/monitoring/ingestion/failed` | Get failed ingestions |
+| **Monitoring** | POST | `/admin/monitoring/ingestion/retry/:id` | Retry failed ingestion |
+| **Monitoring** | GET | `/admin/monitoring/statistics` | Get knowledge base statistics |
+| **Audit** | GET | `/admin/audit/logs` | List audit logs |
+
+### Base URL
+
+- **Development:** `http://localhost:3000`
+- **Production:** `https://your-domain.com`
+
+### Authentication Header
+
+All endpoints (except `/admin/auth/login`) require:
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
 
 ---
 

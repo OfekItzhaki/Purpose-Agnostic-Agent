@@ -18,10 +18,7 @@ import { UsageTrackerService } from './usage-tracker.service.js';
     {
       provide: GeminiProvider,
       useFactory: () => {
-        const apiKey = process.env.GOOGLE_AI_API_KEY;
-        if (!apiKey) {
-          throw new Error('GOOGLE_AI_API_KEY is required');
-        }
+        const apiKey = process.env.GOOGLE_AI_API_KEY || '';
         return new GeminiProvider(apiKey);
       },
     },

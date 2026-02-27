@@ -147,7 +147,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Test retry logic for HTTP 429
     - Test all providers failed scenario
 
-- [-] 4. RAG Module with PDF parsing and vector search
+- [x] 4. RAG Module with PDF parsing and vector search
   - [x] 4.1 Create repository interfaces and implementations
     - Define KnowledgeChunkRepository interface with save, saveBatch, search, findByDocumentId methods
     - Create PostgresKnowledgeChunkRepository implementing the interface
@@ -222,7 +222,7 @@ This implementation plan breaks down the Universal Brain feature into discrete, 
     - Test vector search with known embeddings
     - Test category filtering logic
 
-- [-] 5. Persona Module with CQRS pattern
+- [x] 5. Persona Module with CQRS pattern
   - [x] 5.1 Define persona domain models and DTOs
     - Create Persona interface with id, name, description, systemPrompt, knowledgeCategory, temperature, maxTokens
     - Create PersonaInfo interface for list responses

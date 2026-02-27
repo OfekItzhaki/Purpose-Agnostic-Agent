@@ -8,9 +8,16 @@ import {
 export class GeminiProvider implements LLMProvider {
   private genAI: GoogleGenerativeAI;
   private model: any;
+  private hasValidApiKey: boolean;
 
   constructor(apiKey: string) {
-    this.genAI = new GoogleGenerativeAI(apiKey);
+    this.hasValidApiKey = !!apiKey && apiKey.length > 0;
+    
+    if (!this.hasValidApiKey) {
+      console.warn('GeminiProvider: API key is missing or empty. Provider will be unavailable.');
+    }
+    
+    this.genAI = new GoogleGenerativeAI(apiKey || 'dummy-key');
     this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
   }
 
@@ -49,11 +56,29 @@ export class GeminiProvider implements LLMProvider {
         latencyMs: 0,
       };
     } catch (error: any) {
+      // Check for authentication errors
+      const isAuthError = 
+        error.status === 401 || 
+        error.status === 403 ||
+        error.message?.includes('API key not valid') ||
+        error.message?.includes('API key expired');
+      
+      if (isAuthError) {
+        throw new Error(
+          'Google AI Studio API key is invalid or expired. Please check your GOOGLE_AI_API_KEY configuration.'
+        );
+      }
+      
       throw new Error(`Gemini API error: ${error.message}`);
     }
   }
 
   async isAvailable(): Promise<boolean> {
+    // If API key is missing or invalid, provider is not available
+    if (!this.hasValidApiKey) {
+      return false;
+    }
+    
     try {
       // Simple health check - try to generate a minimal response
       const result = await this.model.generateContent({

@@ -11,9 +11,16 @@ import {
 export class OpenRouterGPT4Provider implements LLMProvider {
   private readonly httpClient: AxiosInstance;
   private readonly apiKey: string;
+  private readonly hasValidApiKey: boolean;
 
   constructor(private readonly configService: ConfigService) {
     this.apiKey = this.configService.get<string>('OPENROUTER_API_KEY') || '';
+    this.hasValidApiKey = !!this.apiKey && this.apiKey.length > 0;
+    
+    if (!this.hasValidApiKey) {
+      console.warn('OpenRouterGPT4Provider: API key is missing or empty. Provider will be unavailable.');
+    }
+    
     this.httpClient = axios.create({
       baseURL: 'https://openrouter.ai/api/v1',
       timeout: 30000, // 30 second timeout
@@ -49,7 +56,20 @@ export class OpenRouterGPT4Provider implements LLMProvider {
         tokensUsed: response.data.usage?.total_tokens || 0,
         latencyMs,
       };
-    } catch (error) {
+    } catch (error: any) {
+      // Check for authentication errors
+      const isAuthError = 
+        error.response?.status === 401 || 
+        error.response?.status === 403 ||
+        error.message?.includes('authentication') ||
+        error.message?.includes('API key');
+      
+      if (isAuthError) {
+        throw new Error(
+          'OpenRouter API key is invalid or expired. Please check your OPENROUTER_API_KEY configuration.'
+        );
+      }
+      
       throw error;
     }
   }
@@ -63,6 +83,11 @@ export class OpenRouterGPT4Provider implements LLMProvider {
   }
 
   async isAvailable(): Promise<boolean> {
+    // If API key is missing or invalid, provider is not available
+    if (!this.hasValidApiKey) {
+      return false;
+    }
+    
     try {
       await this.httpClient.get('/models', { timeout: 5000 });
       return true;
