@@ -89,7 +89,7 @@ async function bootstrap() {
     const filteredAdminDocument = {
       ...adminDocument,
       paths: Object.keys(adminDocument.paths)
-        .filter((path) => path.startsWith('/admin'))
+        .filter((path) => path.startsWith('/api/admin') || path.startsWith('/admin'))
         .reduce((acc, path) => {
           acc[path] = adminDocument.paths[path];
           return acc;
