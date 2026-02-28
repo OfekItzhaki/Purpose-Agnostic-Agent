@@ -47,7 +47,27 @@ CREATE TABLE IF NOT EXISTS knowledge_categories (
 
 -- Verification queries
 -- Uncomment to verify tables were created successfully
--- SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('admin_users', 'audit_logs', 'knowledge_categories');
+-- SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('admin_users', 'audit_logs', 'knowledge_categories', 'ingestion_events');
 -- \d admin_users
 -- \d audit_logs
 -- \d knowledge_categories
+-- \d ingestion_events
+
+-- Create ingestion_events table for monitoring ingestion pipeline
+CREATE TABLE IF NOT EXISTS ingestion_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id UUID NOT NULL,
+  event_type VARCHAR(50) NOT NULL,
+  timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+  processing_time_ms INTEGER,
+  embedding_provider VARCHAR(100),
+  error_message TEXT,
+  CONSTRAINT fk_ingestion_events_document
+    FOREIGN KEY (document_id)
+    REFERENCES knowledge_documents(id)
+    ON DELETE CASCADE
+);
+
+-- Create indexes on ingestion_events for efficient querying
+CREATE INDEX IF NOT EXISTS idx_ingestion_events_document_id ON ingestion_events(document_id);
+CREATE INDEX IF NOT EXISTS idx_ingestion_events_timestamp ON ingestion_events(timestamp DESC);
