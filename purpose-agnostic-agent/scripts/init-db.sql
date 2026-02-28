@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS knowledge_documents (
   category TEXT NOT NULL,
   file_hash TEXT NOT NULL,
   total_chunks INTEGER NOT NULL,
+  status VARCHAR(50) DEFAULT 'completed',
+  error_message TEXT,
+  retry_count INTEGER DEFAULT 0,
   ingested_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   metadata JSONB,
   UNIQUE(source_path)
 );
