@@ -95,3 +95,18 @@ CREATE TABLE IF NOT EXISTS personas (
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- Ingestion events table (for monitoring ingestion pipeline)
+CREATE TABLE IF NOT EXISTS ingestion_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id UUID NOT NULL REFERENCES knowledge_documents(id) ON DELETE CASCADE,
+  event_type VARCHAR(50) NOT NULL,
+  timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+  processing_time_ms INTEGER,
+  embedding_provider VARCHAR(100),
+  error_message TEXT
+);
+
+-- Create indexes on ingestion_events for efficient querying
+CREATE INDEX IF NOT EXISTS idx_ingestion_events_document_id ON ingestion_events(document_id);
+CREATE INDEX IF NOT EXISTS idx_ingestion_events_timestamp ON ingestion_events(timestamp DESC);
